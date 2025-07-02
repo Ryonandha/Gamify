@@ -1,298 +1,245 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Online examiner </title>
-<link  rel="stylesheet" href="css/bootstrap.min.css"/>
- <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
- <link rel="stylesheet" href="css/main.css">
- <link  rel="stylesheet" href="css/font.css">
- <script src="js/jquery.js" type="text/javascript"></script>
-
-  <script src="js/bootstrap.min.js"  type="text/javascript"></script>
- 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-
-<script>
-$(function () {
-    $(document).on( 'scroll', function(){
-        console.log('scroll top : ' + $(window).scrollTop());
-        if($(window).scrollTop()>=$(".logo").height())
-        {
-             $(".navbar").addClass("navbar-fixed-top");
-        }
-
-        if($(window).scrollTop()<$(".logo").height())
-        {
-             $(".navbar").removeClass("navbar-fixed-top");
-        }
-    });
-});</script>
-</head>
-
-<body  style="background:#eee;">
-<div class="header">
-<div class="row">
-<div class="col-lg-6">
-</div>
 <?php
- include_once 'dbConnection.php';
 session_start();
-$email=$_SESSION['email'];
-  if(!(isset($_SESSION['email']))){
-header("location:index.php");
-
+// Redirect to index if not logged in
+if (!isset($_SESSION['email'])) {
+    header("Location: index.php");
+    exit();
 }
-else
-{
-$name = $_SESSION['name'];
-
+// Include database connection
 include_once 'dbConnection.php';
-echo '<span class="pull-right top title1" ><span class="log1"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;&nbsp;Hello,</span> <a href="headdash.php" class="log log1">'.$email.'</a>&nbsp;|&nbsp;<a href="logout.php?q=headdash.php" class="log"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Signout</button></a></span>';
-}?>
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Super Admin - Ujian Ceria</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #3d5afe;
+      --secondary-color: #00b0ff;
+      --background-color: #f4f7fc;
+      --text-color: #333;
+      --card-bg: #ffffff;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+    }
+    .navbar {
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand, .nav-link, .navbar-text {
+      color: #fff !important;
+      font-weight: 500;
+    }
+    .nav-link.active, .nav-link:hover {
+      color: #fff !important;
+      font-weight: 600;
+      transform: translateY(-2px);
+      transition: all 0.2s ease-in-out;
+    }
+    .nav-link i {
+      margin-right: 8px;
+    }
+    .dropdown-item {
+        color: var(--text-color) !important;
+    }
+    .dropdown-item:active {
+        background-color: var(--primary-color);
+        color: #fff !important;
+    }
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      overflow: hidden; /* Ensures child elements conform to border radius */
+    }
+    .card-header {
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      color: #fff;
+      font-weight: 600;
+      padding: 1rem 1.5rem;
+      border-bottom: none;
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+    .table-responsive {
+        margin-top: 1rem;
+    }
+    .stat-card {
+      color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .stat-card .stat-icon {
+      font-size: 3rem;
+      opacity: 0.8;
+    }
+    .stat-card .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    .bg-users { background: #ff9f43; }
+    .bg-quizzes { background: #1e90ff; }
+    .bg-feedback { background: #32cd32; }
+  </style>
+</head>
+<body>
 
-</div></div>
-<!-- admin start-->
-
-<!--navigation menu-->
-<nav class="navbar navbar-default title1">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="headdash.php?q=0"><b>Dashboard - head</b></a>
-    </div>
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li <?php if(@$_GET['q']==0) echo'class="active"'; ?>><a href="headdash.php?q=0">Home<span class="sr-only">(current)</span></a></li>
-        <li <?php if(@$_GET['q']==1) echo'class="active"'; ?>><a href="headdash.php?q=1">User</a></li>
-		<li <?php if(@$_GET['q']==2) echo'class="active"'; ?>><a href="headdash.php?q=2">Ranking</a></li>
-		<li <?php if(@$_GET['q']==3) echo'class="active"'; ?>><a href="headdash.php?q=3">Feedback</a></li>
-        <li class="dropdown <?php if(@$_GET['q']==4 || @$_GET['q']==5) echo'active'; ?>">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="headdash.php?q=4">Add Admin</a></li>
-            <li><a href="headdash.php?q=5">Remove Admin</a></li>
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="headdash.php?q=0"><i class="fas fa-star"></i> Ujian Ceria Admin</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navCer">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navCer">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link <?php if(@$_GET['q']==0) echo'active'; ?>" href="headdash.php?q=0"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link <?php if(@$_GET['q']==1) echo'active'; ?>" href="headdash.php?q=1"><i class="fas fa-users"></i>Pengguna</a></li>
+        <li class="nav-item"><a class="nav-link <?php if(@$_GET['q']==2) echo'active'; ?>" href="headdash.php?q=2"><i class="fas fa-trophy"></i>Peringkat</a></li>
+        <li class="nav-item"><a class="nav-link <?php if(@$_GET['q']==3) echo'active'; ?>" href="headdash.php?q=3"><i class="fas fa-comments"></i>Feedback</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle <?php if(@$_GET['q']==4 || @$_GET['q']==5 || @$_GET['q']==6 || @$_GET['q']==7) echo'active'; ?>" href="#" role="button" data-bs-toggle="dropdown"><i class="fas fa-tasks"></i>Manajemen</a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="headdash.php?q=6">Tambah Siswa</a></li>
+            <li><a class="dropdown-item" href="headdash.php?q=7">Hapus Siswa</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="headdash.php?q=4">Tambah Admin</a></li>
+            <li><a class="dropdown-item" href="headdash.php?q=5">Hapus Admin</a></li>
           </ul>
         </li>
-      </ul> 
-          </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+        <li class="nav-item">
+          <a class="nav-link" href="logout.php?q=headdash.php"><i class="fas fa-sign-out-alt"></i>Keluar</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>
-<!--navigation menu closed-->
-<div class="container"><!--container start-->
-<div class="row">
-<div class="col-md-12">
-<!--home start-->
 
-<?php if(@$_GET['q']==0) {
+<div class="container my-4">
 
-$result = mysqli_query($con,"SELECT * FROM quiz ORDER BY date DESC") or die('Error');
-echo  '<div class="panel"><table class="table table-striped title1">
-<tr><td><b>S.N.</b></td><td><b>Topic</b></td><td><b>Total question</b></td><td><b>Marks</b></td><td><b>positive</b></td><td><b>negative</b></td><td><b>Time limit</b></td><td></td></tr>';
-$c=1;
-while($row = mysqli_fetch_array($result)) {
-	$title = $row['title'];
-	$total = $row['total'];
-	$sahi = $row['sahi'];
-  $wrong = $row['wrong'];
-    $time = $row['time'];
-	$eid = $row['eid'];
-$q12=mysqli_query($con,"SELECT score FROM history WHERE eid='$eid' AND email='$email'" )or die('Error98');
-$rowcount=mysqli_num_rows($q12);	
-if($rowcount == 0){
-	echo '<tr><td>'.$c++.'</td><td>'.$title.'</td><td>'.$total.'</td><td>'.$sahi*$total.'</td><td>'.$sahi.'</td><td>'.$wrong.'</td><td>'.$time.'&nbsp;min</td>
-	</tr>';
-}
-else
-{
-echo '<tr style="color:#99cc32"><td>'.$c++.'</td><td>'.$title.'&nbsp;<span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td><td>'.$total.'</td><td>'.$sahi*$total.'</td><td>'.$time.'&nbsp;min</td>
-	</tr>';
-}
-}
-$c=0;
-echo '</table></div>';
+  <?php if(@$_GET['q']==0) {
+      // Fetching stats
+      $user_count = mysqli_num_rows(mysqli_query($con, "SELECT * FROM user"));
+      $quiz_count = mysqli_num_rows(mysqli_query($con, "SELECT * FROM quiz"));
+      $feedback_count = mysqli_num_rows(mysqli_query($con, "SELECT * FROM feedback"));
+  ?>
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card bg-users">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">Total Siswa</h5>
+                        <p class="stat-number mb-0"><?= $user_count ?></p>
+                    </div>
+                    <i class="fas fa-user-graduate stat-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card bg-quizzes">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">Jumlah Soal</h5>
+                        <p class="stat-number mb-0"><?= $quiz_count ?></p>
+                    </div>
+                    <i class="fas fa-book-open stat-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card bg-feedback">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">Feedback Masuk</h5>
+                        <p class="stat-number mb-0"><?= $feedback_count ?></p>
+                    </div>
+                    <i class="fas fa-comment-dots stat-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+  <?php
+    $result = mysqli_query($con,"SELECT * FROM quiz ORDER BY date DESC") or die('Error');
+    echo '<div class="card"><div class="card-header"><i class="fas fa-list-alt me-2"></i>Daftar Soal Tersedia</div><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>No</th><th>Topik</th><th>Jumlah Soal</th><th>Skor Total</th><th>Benar</th><th>Salah</th><th>Waktu</th></tr></thead><tbody>';
+    $c=1;
+    while($row = mysqli_fetch_array($result)) {
+      echo '<tr><td>'.$c++.'</td><td>'.htmlspecialchars($row['title']).'</td><td>'.$row['total'].'</td><td>'.($row['sahi']*$row['total']).'</td><td>'.$row['sahi'].'</td><td>'.$row['wrong'].'</td><td>'.$row['time'].' menit</td></tr>';
+    }
+    echo '</tbody></table></div></div></div>';
+  } ?>
 
-}
+  <?php if(@$_GET['q']==1) {
+    $result = mysqli_query($con,"SELECT * FROM user") or die('Error');
+    echo '<div class="card"><div class="card-header"><i class="fas fa-users me-2"></i>Daftar Pengguna (Siswa)</div><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>No</th><th>Nama</th><th>Jenis Kelamin</th><th>NIS/Sekolah</th><th>Email</th></tr></thead><tbody>';
+    $c=1;
+    while($row = mysqli_fetch_array($result)) {
+      echo '<tr><td>'.$c++.'</td><td>'.htmlspecialchars($row['name']).'</td><td>'.($row['gender'] == 'M' ? 'Laki-laki' : 'Perempuan').'</td><td>'.htmlspecialchars($row['college']).'</td><td>'.htmlspecialchars($row['email']).'</td></tr>';
+    }
+    echo '</tbody></table></div></div></div>';
+  } ?>
 
-//ranking start
-if(@$_GET['q']== 2) 
-{
-$q=mysqli_query($con,"SELECT * FROM rank  ORDER BY score DESC " )or die('Error223');
-echo  '<div class="panel title">
-<table class="table table-striped title1" >
-<tr ><td><b>Rank</b></td><td><b>Name</b></td><td><b>Gender</b></td><td><b>College</b></td><td><b>Score</b></td></tr>';
-$c=0;
-while($row=mysqli_fetch_array($q) )
-{
-$e=$row['email'];
-$s=$row['score'];
-$q12=mysqli_query($con,"SELECT * FROM user WHERE email='$e' " )or die('Error231');
-while($row=mysqli_fetch_array($q12) )
-{
-$name=$row['name'];
-$gender=$row['gender'];
-$college=$row['college'];
-}
-$c++;
-echo '<tr><td style="color:#99cc32"><b>'.$c.'</b></td><td>'.$name.'</td><td>'.$gender.'</td><td>'.$college.'</td><td>'.$s.'</td><td>';
-}
-echo '</table></div>';}
+  <?php if(@$_GET['q']==2) {
+    $q=mysqli_query($con,"SELECT * FROM rank ORDER BY score DESC") or die('Error');
+    echo '<div class="card"><div class="card-header"><i class="fas fa-trophy me-2"></i>Peringkat Siswa</div><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Peringkat</th><th>Nama</th><th>Sekolah</th><th>Nilai</th></tr></thead><tbody>';
+    $c=1;
+    while($row=mysqli_fetch_array($q)) {
+      $q2=mysqli_query($con,"SELECT * FROM user WHERE email='".mysqli_real_escape_string($con, $row['email'])."'") or die('Error');
+      while($user=mysqli_fetch_array($q2)) {
+        echo '<tr><td>'.$c++.'</td><td>'.htmlspecialchars($user['name']).'</td><td>'.htmlspecialchars($user['college']).'</td><td>'.htmlspecialchars($row['score']).'</td></tr>';
+      }
+    }
+    echo '</tbody></table></div></div></div>';
+  } ?>
 
-?>
+  <?php if(@$_GET['q']==3) {
+    $result = mysqli_query($con,"SELECT * FROM feedback ORDER BY date DESC") or die('Error');
+    echo '<div class="card"><div class="card-header"><i class="fas fa-comments me-2"></i>Kritik & Saran Masuk</div><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>No</th><th>Dari</th><th>Email</th><th>Pesan</th></tr></thead><tbody>';
+    $c=1;
+    while($row = mysqli_fetch_array($result)) {
+      echo '<tr><td>'.$c++.'</td><td>'.htmlspecialchars($row['name']).'</td><td>'.htmlspecialchars($row['email']).'</td><td>'.htmlspecialchars($row['feedback']).'</td></tr>';
+    }
+    echo '</tbody></table></div></div></div>';
+  } ?>
 
+  <?php if(@$_GET['q']==6) {
+    echo '<div class="card"><div class="card-header"><i class="fas fa-user-plus me-2"></i>Formulir Tambah Siswa Baru</div><div class="card-body"><form action="sign.php?q=headdash.php?q=6" method="POST"><div class="mb-3"><label for="name" class="form-label">Nama Lengkap</label><input type="text" class="form-control" name="name" required></div><div class="mb-3"><label for="gender" class="form-label">Jenis Kelamin</label><select class="form-select" name="gender" required><option selected disabled value="">-- Pilih --</option><option value="M">Laki-laki</option><option value="F">Perempuan</option></select></div><div class="mb-3"><label for="college" class="form-label">NIS / Nama Sekolah</label><input type="text" class="form-control" name="college" required></div><div class="mb-3"><label for="mob" class="form-label">No. HP (Orang Tua)</label><input type="tel" class="form-control" name="mob" required></div><div class="mb-3"><label for="email" class="form-label">Alamat Email</label><input type="email" class="form-control" name="email" required></div><div class="mb-3"><label for="password" class="form-label">Password</label><input type="password" class="form-control" name="password" required></div><button type="submit" class="btn btn-primary"><i class="fas fa-check me-2"></i>Tambahkan Siswa</button></form></div></div>';
+  } ?>
 
-<!--home closed-->
-<!--users start-->
-<?php if(@$_GET['q']==1) {
+  <?php if(@$_GET['q']==7) {
+    $result = mysqli_query($con,"SELECT * FROM user") or die('Error');
+    echo '<div class="card"><div class="card-header"><i class="fas fa-user-times me-2"></i>Hapus Data Siswa</div><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Nama</th><th>Email</th><th>No HP</th><th>Sekolah</th><th>Aksi</th></tr></thead><tbody>';
+    while($row = mysqli_fetch_array($result)) {
+      echo '<tr><td>'.htmlspecialchars($row['name']).'</td><td>'.htmlspecialchars($row['email']).'</td><td>'.htmlspecialchars($row['mob']).'</td><td>'.htmlspecialchars($row['college']).'</td><td><a href="update.php?demail1='.urlencode($row['email']).'" class="btn btn-danger btn-sm" onclick="return confirm(\'Anda yakin ingin menghapus siswa ini?\')"><i class="fas fa-trash-alt"></i> Hapus</a></td></tr>';
+    }
+    echo '</tbody></table></div></div></div>';
+  } ?>
 
-$result = mysqli_query($con,"SELECT * FROM user") or die('Error');
-echo  '<div class="panel"><table class="table table-striped title1">
-<tr><td><b>S.N.</b></td><td><b>Name</b></td><td><b>Gender</b></td><td><b>College</b></td><td><b>Email</b></td><td><b>Mobile</b></td><td></td></tr>';
-$c=1;
-while($row = mysqli_fetch_array($result)) {
-	$name = $row['name'];
-	$mob = $row['mob'];
-	$gender = $row['gender'];
-    $email = $row['email'];
-	$college = $row['college'];
+  <?php if(@$_GET['q']==4) {
+    echo '<div class="card"><div class="card-header"><i class="fas fa-user-shield me-2"></i>Formulir Tambah Admin Baru</div><div class="card-body"><form action="signadmin.php?q=headdash.php?q=4" method="POST"><div class="mb-3"><label for="email" class="form-label">Email Admin</label><input type="email" class="form-control" name="email" required></div><div class="mb-3"><label for="password" class="form-label">Password</label><input type="password" class="form-control" name="password" required></div><button type="submit" class="btn btn-primary"><i class="fas fa-check me-2"></i>Tambahkan Admin</button></form></div></div>';
+  } ?>
 
-	echo '<tr><td>'.$c++.'</td><td>'.$name.'</td><td>'.$gender.'</td><td>'.$college.'</td><td>'.$email.'</td><td>'.$mob.'</td>
-	<td><a title="Delete User" href="update.php?demail='.$email.'"><b><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b></a></td></tr>';
-}
-$c=0;
-echo '</table></div>';
+  <?php if(@$_GET['q']==5) {
+    $result = mysqli_query($con,"SELECT * FROM admin WHERE role='admin'") or die('Error');
+    echo '<div class="card"><div class="card-header"><i class="fas fa-user-slash me-2"></i>Hapus Data Admin</div><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Email</th><th>Aksi</th></tr></thead><tbody>';
+    while($row = mysqli_fetch_array($result)) {
+      echo '<tr><td>'.htmlspecialchars($row['email']).'</td><td><a href="update.php?demail1='.urlencode($row['email']).'" class="btn btn-danger btn-sm" onclick="return confirm(\'PERHATIAN: Anda akan menghapus akun admin. Lanjutkan?\')"><i class="fas fa-trash-alt"></i> Hapus</a></td></tr>';
+    }
+    echo '</tbody></table></div></div></div>';
+  } ?>
 
-}?>
-<!--user end-->
-
-<!--feedback start-->
-<?php if(@$_GET['q']==3) {
-$result = mysqli_query($con,"SELECT * FROM `feedback` ORDER BY `feedback`.`date` DESC") or die('Error');
-echo  '<div class="panel"><table class="table table-striped title1">
-<tr><td><b>S.N.</b></td><td><b>Subject</b></td><td><b>Email</b></td><td><b>Date</b></td><td><b>Time</b></td><td><b>By</b></td><td></td><td></td></tr>';
-$c=1;
-while($row = mysqli_fetch_array($result)) {
-	$date = $row['date'];
-	$date= date("d-m-Y",strtotime($date));
-	$time = $row['time'];
-	$subject = $row['subject'];
-	$name = $row['name'];
-	$email = $row['email'];
-	$id = $row['id'];
-	 echo '<tr><td>'.$c++.'</td>';
-	echo '<td><a title="Click to open feedback" href="headdash.php?q=3&fid='.$id.'">'.$subject.'</a></td><td>'.$email.'</td><td>'.$date.'</td><td>'.$time.'</td><td>'.$name.'</td>
-	<td><a title="Open Feedback" href="headdash.php?q=3&fid='.$id.'"><b><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></b></a></td>';
-	echo '<td><a title="Delete Feedback" href="update.php?fdid='.$id.'"><b><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b></a></td>
-
-	</tr>';
-}
-echo '</table></div>';
-}
-?>
-<!--feedback closed-->
-
-<!--feedback reading portion start-->
-<?php if(@$_GET['fid']) {
-echo '<br />';
-$id=@$_GET['fid'];
-$result = mysqli_query($con,"SELECT * FROM feedback WHERE id='$id' ") or die('Error');
-while($row = mysqli_fetch_array($result)) {
-	$name = $row['name'];
-	$subject = $row['subject'];
-	$date = $row['date'];
-	$date= date("d-m-Y",strtotime($date));
-	$time = $row['time'];
-	$feedback = $row['feedback'];
-	
-echo '<div class="panel"<a title="Back to Archive" href="update.php?q1=2"><b><span class="glyphicon glyphicon-level-up" aria-hidden="true"></span></b></a><h2 style="text-align:center; margin-top:-15px;font-family: "Ubuntu", sans-serif;"><b>'.$subject.'</b></h1>';
- echo '<div class="mCustomScrollbar" data-mcs-theme="dark" style="margin-left:10px;margin-right:10px; max-height:450px; line-height:35px;padding:5px;"><span style="line-height:35px;padding:5px;">-&nbsp;<b>DATE:</b>&nbsp;'.$date.'</span>
-<span style="line-height:35px;padding:5px;">&nbsp;<b>Time:</b>&nbsp;'.$time.'</span><span style="line-height:35px;padding:5px;">&nbsp;<b>By:</b>&nbsp;'.$name.'</span><br />'.$feedback.'</div></div>';}
-}?>
-<!--Feedback reading portion closed-->
-
-
-
-<!--add admin start-->
-
-<?php
-if(@$_GET['q']==4) {
-echo ' 
-<div class="row">
-<span class="title1" style="margin-left:40%;font-size:30px;"><b>Enter Admin Details</b></span><br /><br />
- <div class="col-md-3"></div><div class="col-md-6">   <form class="form-horizontal title1" name="form" action="signadmin.php?q=headdash.php?q=4"  method="POST">
-<fieldset>
-
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="name"></label>  
-  <div class="col-md-12">
-  <input id="email" name="email" placeholder="Enter Admin Email" class="form-control input-md" type="email">
-    
-  </div>
 </div>
 
-
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="total"></label>  
-  <div class="col-md-12">
-  <input id="password" name="password" placeholder="Enter password" class="form-control input-md" type="password">
-    
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-md-12 control-label" for=""></label>
-  <div class="col-md-12"> 
-    <input  type="submit" style="margin-left:45%" class="btn btn-primary" value="Submit" class="btn btn-primary"/>
-  </div>
-</div>
-
-</fieldset>
-</form></div>';
-
-
-
-}
-?>
-<!--add admin end-->
-
-
-<!--users start-->
-<?php if(@$_GET['q']==5) {
-
-$result = mysqli_query($con,"SELECT * FROM admin where role ='admin' ") or die('Error');
-echo  '<div class="panel"><table class="table table-striped title1">
-<tr><td><b>Email</b></td><td></td></tr>';
-$c=1;
-while($row = mysqli_fetch_array($result)) {
-  
-    $email = $row['email'];
-  
-
-  echo '<tr><td>'.$email.'</td>
-  <td><a title="Delete User" href="update.php?demail1='.$email.'"><b><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></b></a></td></tr>';
-}
-$c=0;
-echo '</table></div>';
-
-}?>
-<!--user end-->
-
-
-
-</div><!--remove admin closed-->
-</div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

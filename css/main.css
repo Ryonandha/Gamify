@@ -1,151 +1,148 @@
-body
-{
-overflow-x:hidden;
-width:100%;
-font-size: 12px !important;
-font-family: Montserrat, sans-serif;
-background:#eee;
-min-height:550px;
-background-attachment:fixed;
-}
-.bg
-{
-min-height:540px;
-}
-.bg1
-{
-background:url(../image/bg.jpg);
-min-height:535px;
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+    font-family: 'Fredoka', sans-serif;
+    background: #f8f9fa;
+    color: #333;
 }
 
-@font-face {
-   font-family: 'typo';
-    src: url('../fonts/typo.ttf');
-	}
-
-@font-face {
-   font-family: 'gothic';
-    src: url('../fonts/gothics.ttf');
-	}
-
-.panel{
-border-color:#eee;
-margin:40px;
-padding:20px;
-font: 15px "Century Gothic", "Times Roman", sans-serif;
+/* HEADER MODERN */
+.header {
+    background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+    color: white;
+    padding: 15px 0;
+    border-bottom: 4px solid #ffb6b9;
 }
 
-.title
-{
-font-family:'typo';
+.header .log1, .header .log {
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
 }
 
-.header
-{
-background:#f4511e;
-height:70px;
-}
-.logo
-{
-font-family: 'Montserrat, sans-serif';
-font-size:35px;
-color:#ffbb33;
-margin:15px;
+.header .log:hover {
+    text-decoration: underline;
 }
 
-.title1{
-font: 16px "Century Gothic", "Times Roman", sans-serif;
-}
-.title2{
-font-family: 'Ubuntu', sans-serif;
-font-size:20px;
-}
-
-
-.sub1
-{
-width:90px;
-color:#202020;
-background:orange;
-font-size:15px;
-height:35px;
-margin:20px;
-padding:10px;
-width:100px;
+/* NAVBAR */
+.navbar.title1 {
+    background-color: #ffffff;
+    border-bottom: 3px solid #ffd3e0;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
 }
 
-
-.sub
-{
-width:100%;
-background-color:#9acd32;
-font-size:20px;
-padding:2px;
-margin-top:15px;
-margin-right:20px;
-}
-.sub:hover
-{
-color:#fff;
+.navbar.title1 .navbar-brand {
+    font-weight: bold;
+    color: #ff4d6d !important;
+    font-size: 1.3rem;
 }
 
-.footer
-{
-font-size:15px;
-text-align:center;
-border-top:1px solid;
-border-color:#323232;
-background-color:#202020;
-}
-.footer a
-{
-margin:25px;
-color:orange;
-text-decoration:none;
-font: 15px "Century Gothic", "Times Roman", sans-serif;
-
-}
-.footer a:hover
-{
-text-decoration:none;
-color:#9acd32;
-border-top:2px solid;
-border-color:orange;
-
+.navbar.title1 .nav > li > a {
+    color: #333 !important;
+    font-weight: 600;
 }
 
-.box
-{
-padding:9px;
-}
-hr{
-color:#000000;
-}
-.top
-{
-margin-top:20px;
-}
-.log1
-{
-font: 15px 'Montserrat', sans-serif;
-color:#fff;
-margin-left:10px;
+.navbar.title1 .nav > li.active > a {
+    color: #ff4d6d !important;
+    border-bottom: 2px solid #ff4d6d;
 }
 
-.log
-{
-margin:10px;
-margin-right:60px;
-margin-left:5px;
-color:#fff;
-text-decoration:none;
-font-size:20px;
-font-size:15px;
+/* TABEL YANG LEBIH BERWARNA */
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #fef4f4;
 }
-.log:hover
-{
-color:#9acd32;
-border-top:2px solid;
-border-color:orange;
-text-decoration:none;
+
+.table-striped > tbody > tr:hover {
+    background-color: #ffe9ec;
+}
+
+/* QUIZ SELESAI */
+tr.quiz-selesai {
+    background-color: #d4edda !important;
+    color: #155724;
+    font-weight: bold;
+}
+
+/* PANEL / CARD */
+.panel {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    margin-bottom: 30px;
+}
+
+/* TOMBOL UTAMA */
+.btn-primary, .btn-start {
+    background-color: #ff4d6d;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 30px;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    transition: 0.3s ease;
+}
+
+.btn-primary:hover, .btn-start:hover {
+    background-color: #e0435e;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* QUIZ BUTTON KHUSUS */
+.btn-start {
+    background: #28a745;
+}
+
+.btn-start:hover {
+    background: #218838;
+}
+
+/* PESAN DARI GURU */
+.panel h4 {
+    font-weight: bold;
+    color: #6f42c1;
+    margin-bottom: 15px;
+}
+
+/* HASIL */
+.title {
+    font-family: 'Fredoka', sans-serif;
+    color: #ff4d6d;
+    font-weight: bold;
+}
+
+/* INPUT RADIO UNTUK QUIZ */
+input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+/* FOOTER (OPTIONAL) */
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #999;
+}
+
+/* RESPONSIF */
+@media screen and (max-width: 768px) {
+    .navbar.title1 .navbar-brand {
+        font-size: 1rem;
+    }
+
+    .header .log1 {
+        font-size: 0.9rem;
+    }
+
+    .btn-primary, .btn-start {
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+    
 }

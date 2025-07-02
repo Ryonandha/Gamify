@@ -1,275 +1,319 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Online examiner</title>
-<link  rel="stylesheet" href="css/bootstrap.min.css"/>
- <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
- <link rel="stylesheet" href="css/main.css">
- <link  rel="stylesheet" href="css/font.css">
- <script src="js/jquery.js" type="text/javascript"></script>
-
- 
-  <script src="js/bootstrap.min.js"  type="text/javascript"></script>
-<link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
- <!--alert message-->
-<?php if(@$_GET['w'])
-{echo'<script>alert("'.@$_GET['w'].'");</script>';}
-?>
-<!--alert message end-->
-
-</head>
 <?php
-include_once 'dbConnection.php';
-?>
-<body>
-<div class="header">
-<div class="row" style="background-color:#f4511e;">
-<div class="col-lg-6" >
-<span class="logo"></span></div>
-<div class="col-md-4 col-md-offset-2">
- <?php
- include_once 'dbConnection.php';
+// Selalu letakkan session_start() di paling atas
 session_start();
-  if(!(isset($_SESSION['email']))){
-header("location:index.php");
-
-}
-else
-{
-$name = $_SESSION['name'];
-$email=$_SESSION['email'];
-
 include_once 'dbConnection.php';
-echo '<span class="pull-right top title1" ><span class="log1"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;&nbsp;Welcome,</span> <a href="account.php?q=1" class="log log1">'.$name.'</a>&nbsp;|&nbsp;<a href="logout.php?q=account.php" class="log"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Signout</button></a></span>';
-}?>
-</div>
-</div></div>
-<div class="bg">
 
-<!--navigation menu-->
-<nav class="navbar navbar-default title1">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="account.php?q=1"><b>Dashboard - Student</b></a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar left">
-        <li <?php if(@$_GET['q']==1) echo'class="active"'; ?> ><a href="account.php?q=1"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Home<span class="sr-only">(current)</span></a></li>
-        <li <?php if(@$_GET['q']==2) echo'class="active"'; ?>><a href="account.php?q=2"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;History</a></li>
-    <li <?php if(@$_GET['q']==3) echo'class="active"'; ?>><a href="account.php?q=3"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Ranking</a></li>
+// Redirect jika user belum login
+if (!isset($_SESSION['email'])) {
+    header("location:index.php");
+    exit();
+} else {
+    $name = $_SESSION['name'];
+    $email = $_SESSION['email'];
+}
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Examiner - Dashboard Siswa</title>
     
-  </ul>
-            
-      </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav><!--navigation menu closed-->
-<div class="container"><!--container start-->
-<div class="row">
-<div class="col-md-12">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
 
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+        }
+        .header {
+            background: linear-gradient(90deg, #f4511e, #ff7043);
+            color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+        }
+        .header a:hover {
+            text-decoration: underline;
+        }
+        .navbar-brand b {
+            font-family: 'Ubuntu', sans-serif;
+        }
+        .card {
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .btn-start {
+            background-color: #4caf50;
+            color: white;
+        }
+        .btn-start:hover {
+            background-color: #45a049;
+            color: white;
+        }
+        
+        /* == CSS PENTING UNTUK VIDEO == */
+        .video-responsive {
+            position: relative;
+            overflow: hidden;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            border-radius: 12px 12px 0 0;
+        }
+        .video-responsive iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        /* == AKHIR CSS VIDEO == */
 
- 
+    </style>
 
+    <?php if(@$_GET['w']) { echo'<script>alert("'.htmlspecialchars(@$_GET['w']).'");</script>'; } ?>
+</head>
+<body>
 
+<div class="header">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="account.php?q=1" class="h4 mb-0 text-white text-decoration-none">Ujian Ceria</a>
+        <div>
+            <span><i class="fas fa-user-circle"></i> Selamat Datang,</span>
+            <a href="account.php?q=1"><?php echo htmlspecialchars($name); ?></a>&nbsp;|&nbsp;
+            <a href="logout.php?q=account.php"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+        </div>
+    </div>
+</div>
 
-<!--home start-->
-<?php if(@$_GET['q']==1) {
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="account.php?q=1"><b><i class="fas fa-user-graduate"></i> Dashboard Siswa</b></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link <?php if(@$_GET['q']==1) echo 'active'; ?>" href="account.php?q=1"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(@$_GET['q']==2) echo 'active'; ?>" href="account.php?q=2"><i class="fas fa-history"></i> Riwayat</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(@$_GET['q']==3) echo 'active'; ?>" href="account.php?q=3"><i class="fas fa-trophy"></i> Peringkat</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(@$_GET['q']==5) echo 'active'; ?>" href="account.php?q=5"><i class="fas fa-book"></i> Materi Belajar</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-$result = mysqli_query($con,"SELECT * FROM quiz ORDER BY date DESC") or die('Error');
-echo  '<div class="panel"><table class="table table-striped title1">
-<tr style="color:black"><td><b>S.N.</b></td><td><b>Topic</b></td><td><b>Total question</b></td><td><b>Marks</b></td><td><b>positive</b></td><td><b>negative</b></td><td><b>Time limit</b></td><td></td><td></td></tr>';
-$c=1;
-while($row = mysqli_fetch_array($result)) {
-  $title = $row['title'];
-  $total = $row['total'];
-  $sahi = $row['sahi'];
-  $wrong = $row['wrong'];
-    $time = $row['time'];
-  $eid = $row['eid'];
- // $id = $row['id'];
-$q12=mysqli_query($con,"SELECT score FROM history WHERE eid='$eid' AND email='$email'" )or die('Error98');
-$rowcount=mysqli_num_rows($q12);  
-if($rowcount == 0){
-  echo '<tr><td>'.$c++.'</td><td>'.$title.'</td><td>'.$total.'</td><td>'.$sahi*$total.'</td><td>'.$sahi.'</td><td>'.$wrong.'</td><td>'.$time.'&nbsp;min</td>
-  <td><a title="Open quiz description" href="account.php?q=1&fid='.$eid.'"><b><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></b></a></td>
-  <td><b><a href="account.php?q=quiz&step=2&eid='.$eid.'&n=1&t='.$total.'" class="pull-right btn sub1" style="margin:0px;background:#99cc32"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Start</b></span></a></b></td></tr>';
-}
-else
-{
-echo '<tr style="color:#99cc32"><td>'.$c++.'</td><td>'.$title.'&nbsp;<span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td><td>'.$total.'</td><td>'.$sahi*$total.'</td><td>'.$sahi.'</td><td>'.$wrong.'</td><td>'.$time.'&nbsp;min</td>
-  </tr>';
-}
-}
-$c=0;
-echo '</table></div>';
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
 
-}?>
-<!----quiz reading portion starts--->
+            <?php if (@$_GET['q'] == 1): // Main Content: Home ?>
+                <?php
+                // Pesan dari guru
+                $qmsg = mysqli_query($con, "SELECT * FROM messages WHERE to_email='$email' ORDER BY date DESC");
+                if (mysqli_num_rows($qmsg) > 0) {
+                    echo '<div class="card"><div class="card-header"><h4>Pesan dari Guru</h4></div><ul class="list-group list-group-flush">';
+                    while ($msg = mysqli_fetch_array($qmsg)) {
+                        echo '<li class="list-group-item"><b>[' . date('d M Y', strtotime($msg['date'])) . ']</b> ' . htmlspecialchars($msg['content']) . '</li>';
+                    }
+                    echo '</ul></div>';
+                }
 
-<?php if(@$_GET['fid']) {
-echo '<br />';
-$eid=@$_GET['fid'];
-$result = mysqli_query($con,"SELECT * FROM quiz WHERE eid='$eid' ") or die('Error');
-while($row = mysqli_fetch_array($result)) {
- // $name = $row['name'];
-  $title = $row['title'];
-  $date = $row['date'];
-  $date= date("d-m-Y",strtotime($date));
-  //$time = $row['time'];
-  $intro = $row['intro'];
-  
-echo '<div class="panel"<a title="Back to Archive" href="update.php?q1=2"><b><span class="glyphicon glyphicon-level-up" aria-hidden="true"></span></b></a><h2 style="text-align:center; margin-top:-15px;font-family: "Ubuntu", sans-serif;"><b>'.$title.'</b></h1>';
- echo '<div class="mCustomScrollbar" data-mcs-theme="dark" style="margin-left:10px;margin-right:10px; max-height:450px; line-height:35px;padding:5px;"><span style="line-height:35px;padding:5px;">-&nbsp;<b>DATE:</b>&nbsp;'.$date.'</span>
-<span style="line-height:35px;padding:5px;"></span><br />'.$intro.'</div></div>';}
-}?>
-<!--quiz reading portion closed-->
+                // Daftar Kuis
+                $result = mysqli_query($con, "SELECT * FROM quiz ORDER BY date DESC") or die('Error');
+                echo '<div class="card"><div class="card-header"><h4>Daftar Kuis Tersedia</h4></div><div class="card-body"><div class="table-responsive"><table class="table table-striped table-hover">
+                      <thead><tr><th>No.</th><th>Topik</th><th>Total Soal</th><th>Waktu</th><th></th></tr></thead><tbody>';
+                $c = 1;
+                while ($row = mysqli_fetch_array($result)) {
+                    $eid = $row['eid'];
+                    $q12 = mysqli_query($con, "SELECT score FROM history WHERE eid='$eid' AND email='$email'") or die('Error98');
+                    $rowcount = mysqli_num_rows($q12);
+                    
+                    echo '<tr><td>' . $c++ . '</td><td>' . htmlspecialchars($row['title']);
+                    if ($rowcount > 0) {
+                        echo '&nbsp;<span class="badge bg-success">Selesai</span>';
+                    }
+                    echo '</td><td>' . $row['total'] . '</td><td>' . $row['time'] . '&nbsp;menit</td><td>';
+                    
+                    if ($rowcount == 0) {
+                        echo '<a href="account.php?q=quiz&step=2&eid=' . $eid . '&n=1&t=' . $row['total'] . '" class="btn btn-sm btn-start"><i class="fas fa-play"></i> Mulai</a>';
+                    } else {
+                        echo '<a href="account.php?q=result&eid=' . $eid . '" class="btn btn-sm btn-info text-white"><i class="fas fa-eye"></i> Lihat Hasil</a>';
+                    }
+                    echo '</td></tr>';
+                }
+                echo '</tbody></table></div></div></div>';
+                ?>
+            <?php endif; ?>
 
-<!--<span id="countdown" class="timer"></span>
-<script>
-var seconds = 40;
-    function secondPassed() {
-    var minutes = Math.round((seconds - 30)/60);
-    var remainingSeconds = seconds % 60;
-    if (remainingSeconds < 10) {
-        remainingSeconds = "0" + remainingSeconds; 
-    }
-    document.getElementById('countdown').innerHTML = minutes + ":" +    remainingSeconds;
-    if (seconds == 0) {
-        clearInterval(countdownTimer);
-        document.getElementById('countdown').innerHTML = "Buzz Buzz";
-    } else {    
-        seconds--;
-    }
-    }
-var countdownTimer = setInterval('secondPassed()', 1000);
-</script>-->
+            <?php if (@$_GET['q'] == 2): // Main Content: History ?>
+                <?php
+                $q = mysqli_query($con, "SELECT * FROM history WHERE email='$email' ORDER BY date DESC ") or die('Error197');
+                echo '<div class="card"><div class="card-header"><h4>Riwayat Pengerjaan Kuis</h4></div><div class="card-body"><div class="table-responsive"><table class="table table-striped table-hover">
+                      <thead><tr><th>No.</th><th>Kuis</th><th>Soal Dikerjakan</th><th>Benar</th><th>Salah</th><th>Skor</th></tr></thead><tbody>';
+                $c = 0;
+                while ($row = mysqli_fetch_array($q)) {
+                    $eid = $row['eid'];
+                    $q23 = mysqli_query($con, "SELECT title FROM quiz WHERE eid='$eid'") or die('Error208');
+                    $quiz_title = mysqli_fetch_array($q23)['title'];
+                    $c++;
+                    echo '<tr><td>' . $c . '</td><td>' . htmlspecialchars($quiz_title) . '</td><td>' . $row['level'] . '</td><td class="text-success">' . $row['sahi'] . '</td><td class="text-danger">' . $row['wrong'] . '</td><td><b>' . $row['score'] . '</b></td></tr>';
+                }
+                echo '</tbody></table></div></div></div>';
+                ?>
+            <?php endif; ?>
 
-<!--home closed-->
+            <?php if (@$_GET['q'] == 3): // Main Content: Ranking ?>
+                <?php
+                $q = mysqli_query($con, "SELECT * FROM rank ORDER BY score DESC ") or die('Error223');
+                echo '<div class="card"><div class="card-header"><h4>Peringkat Peserta</h4></div><div class="card-body"><div class="table-responsive"><table class="table table-striped table-hover">
+                      <thead><tr><th>Peringkat</th><th>Nama</th><th>Asal Sekolah</th><th>Skor</th></tr></thead><tbody>';
+                $c = 0;
+                while ($row = mysqli_fetch_array($q)) {
+                    $e = $row['email'];
+                    $q12 = mysqli_query($con, "SELECT name, college FROM user WHERE email='$e'") or die('Error231');
+                    $user_data = mysqli_fetch_array($q12);
+                    $c++;
+                    echo '<tr><td class="fw-bold">' . $c . '</td><td>' . htmlspecialchars($user_data['name']) . '</td><td>' . htmlspecialchars($user_data['college']) . '</td><td>' . $row['score'] . '</td></tr>';
+                }
+                echo '</tbody></table></div></div></div>';
+                ?>
+            <?php endif; ?>
 
-<!--quiz start-->
-<?php
-if(@$_GET['q']== 'quiz' && @$_GET['step']== 2) {
-$eid=@$_GET['eid'];
-$sn=@$_GET['n'];
-$total=@$_GET['t'];
-$q=mysqli_query($con,"SELECT * FROM questions WHERE eid='$eid' AND sn='$sn' " );
-echo '<div class="panel" style="margin:5%">';
-while($row=mysqli_fetch_array($q) )
-{
-$qns=$row['qns'];
-$qid=$row['qid'];
-echo '<b>Question &nbsp;'.$sn.'&nbsp;::<br />'.$qns.'</b><br /><br />';
-}
-$q=mysqli_query($con,"SELECT * FROM options WHERE qid='$qid' " );
-echo '<form action="update.php?q=quiz&step=2&eid='.$eid.'&n='.$sn.'&t='.$total.'&qid='.$qid.'" method="POST"  class="form-horizontal">
-<br />';
+            <?php if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2): // Main Content: Quiz Start ?>
+                <?php
+                $eid = @$_GET['eid'];
+                $sn = @$_GET['n'];
+                $total = @$_GET['t'];
+                $q = mysqli_query($con, "SELECT * FROM questions WHERE eid='$eid' AND sn='$sn'");
+                
+                echo '<div class="card"><div class="card-body">';
+                if ($row = mysqli_fetch_array($q)) {
+                    $qns = $row['qns'];
+                    $qid = $row['qid'];
+                    echo '<h4>Pertanyaan ' . $sn . ' dari ' . $total . '</h4>';
+                    echo '<p class="lead">' . nl2br(htmlspecialchars($qns)) . '</p>';
+                    
+                    $options_q = mysqli_query($con, "SELECT * FROM options WHERE qid='$qid'");
+                    echo '<form action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST" class="form-horizontal">';
+                    
+                    while ($option_row = mysqli_fetch_array($options_q)) {
+                        echo '<div class="form-check my-3"><input class="form-check-input" type="radio" name="ans" id="opt' . $option_row['optionid'] . '" value="' . $option_row['optionid'] . '" required>
+                              <label class="form-check-label" for="opt' . $option_row['optionid'] . '">' . htmlspecialchars($option_row['option']) . '</label></div>';
+                    }
+                    
+                    echo '<br/><button type="submit" class="btn btn-primary"><i class="fas fa-lock"></i> Submit Jawaban</button></form>';
+                }
+                echo '</div></div>';
+                ?>
+            <?php endif; ?>
 
-while($row=mysqli_fetch_array($q) )
-{
-$option=$row['option'];
-$optionid=$row['optionid'];
-echo'<input type="radio" name="ans" value="'.$optionid.'">'.$option.'<br /><br />';
-}
-echo'<br /><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>&nbsp;Submit</button></form></div>';
-//header("location:dash.php?q=4&step=2&eid=$id&n=$total");
-}
-//result display
-if(@$_GET['q']== 'result' && @$_GET['eid']) 
-{
-$eid=@$_GET['eid'];
-$q=mysqli_query($con,"SELECT * FROM history WHERE eid='$eid' AND email='$email' " )or die('Error157');
-echo  '<div class="panel">
-<center><h1 class="title" style="color:#660033">Result</h1><center><br /><table class="table table-striped title1" style="font-size:20px;font-weight:1000;">';
+            <?php if (@$_GET['q'] == 'result' && @$_GET['eid']): // Main Content: Result Display ?>
+                <?php
+                $eid = @$_GET['eid'];
+                // Tampilkan Ringkasan Skor
+                $q_history = mysqli_query($con, "SELECT * FROM history WHERE eid='$eid' AND email='$email'") or die('Error157');
+                echo '<div class="card mb-4"><div class="card-header bg-primary text-white"><h3><i class="fas fa-poll"></i> Hasil Kuis Anda</h3></div><div class="card-body">';
+                if ($row = mysqli_fetch_array($q_history)) {
+                    echo '<ul class="list-group list-group-flush fs-5">
+                            <li class="list-group-item d-flex justify-content-between"><span>Total Pertanyaan</span> <strong>' . $row['level'] . '</strong></li>
+                            <li class="list-group-item d-flex justify-content-between"><span><i class="fas fa-check-circle text-success"></i> Jawaban Benar</span> <strong class="text-success">' . $row['sahi'] . '</strong></li>
+                            <li class="list-group-item d-flex justify-content-between"><span><i class="fas fa-times-circle text-danger"></i> Jawaban Salah</span> <strong class="text-danger">' . $row['wrong'] . '</strong></li>
+                            <li class="list-group-item d-flex justify-content-between"><span><i class="fas fa-star text-warning"></i> Skor Akhir</span> <strong>' . $row['score'] . '</strong></li>
+                          </ul>';
+                }
+                echo '</div></div>';
 
-while($row=mysqli_fetch_array($q) )
-{
-$s=$row['score'];
-$w=$row['wrong'];
-$r=$row['sahi'];
-$qa=$row['level'];
-echo '<tr style="color:#66CCFF"><td>Total Questions</td><td>'.$qa.'</td></tr>
-      <tr style="color:#99cc32"><td>right Answer&nbsp;<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></td><td>'.$r.'</td></tr> 
-    <tr style="color:red"><td>Wrong Answer&nbsp;<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></td><td>'.$w.'</td></tr>
-    <tr style="color:#66CCFF"><td>Score&nbsp;<span class="glyphicon glyphicon-star" aria-hidden="true"></span></td><td>'.$s.'</td></tr>';
-}
-$q=mysqli_query($con,"SELECT * FROM rank WHERE  email='$email' " )or die('Error157');
-while($row=mysqli_fetch_array($q) )
-{
-$s=$row['score'];
-echo '<tr style="color:#990000"><td>Overall Score&nbsp;<span class="glyphicon glyphicon-stats" aria-hidden="true"></span></td><td>'.$s.'</td></tr>';
-}
-echo '</table></div>';
+                // Tampilkan Pembahasan Jawaban
+                echo '<h3><i class="fas fa-book-reader"></i> Pembahasan Soal</h3>';
+                $q_questions = mysqli_query($con, "SELECT * FROM questions WHERE eid='$eid' ORDER BY sn ASC");
+                $no = 1;
+                while ($question = mysqli_fetch_array($q_questions)) {
+                    $qid = $question['qid'];
+                    $q_options = mysqli_query($con, "SELECT * FROM options WHERE qid='$qid'");
+                    $options = [];
+                    while($opt = mysqli_fetch_array($q_options)){ $options[$opt['optionid']] = $opt['option']; }
+                    $q_correct_ans = mysqli_query($con, "SELECT ansid FROM answer WHERE qid='$qid'");
+                    $correct_ans_id = mysqli_fetch_array($q_correct_ans)['ansid'];
+                    $q_user_ans = mysqli_query($con, "SELECT ans FROM user_answer WHERE eid='$eid' AND email='$email' AND qid='$qid'");
+                    $user_ans_id = mysqli_num_rows($q_user_ans) > 0 ? mysqli_fetch_array($q_user_ans)['ans'] : null;
 
-}
-?>
-<!--quiz end-->
-<?php
-//history start
-if(@$_GET['q']== 2) 
-{
-$q=mysqli_query($con,"SELECT * FROM history WHERE email='$email' ORDER BY date DESC " )or die('Error197');
-echo  '<div class="panel title">
-<table class="table table-striped title1" >
-<tr style="color:black"><td><b>S.N.</b></td><td><b>Quiz</b></td><td><b>Question Solved</b></td><td><b>Right</b></td><td><b>Wrong<b></td><td><b>Score</b></td>';
-$c=0;
-while($row=mysqli_fetch_array($q) )
-{
-$eid=$row['eid'];
-$s=$row['score'];
-$w=$row['wrong'];
-$r=$row['sahi'];
-$qa=$row['level'];
-$q23=mysqli_query($con,"SELECT title FROM quiz WHERE  eid='$eid' " )or die('Error208');
-while($row=mysqli_fetch_array($q23) )
-{
-$title=$row['title'];
-}
-$c++;
-echo '<tr><td>'.$c.'</td><td>'.$title.'</td><td>'.$qa.'</td><td>'.$r.'</td><td>'.$w.'</td><td>'.$s.'</td></tr>';
-}
-echo'</table></div>';
-}
+                    echo '<div class="card mb-3"><div class="card-header bg-light"><strong>Pertanyaan ' . $no++ . ':</strong></div><div class="card-body"><p class="card-text">' . nl2br(htmlspecialchars($question['qns'])) . '</p><ul class="list-group">';
+                    foreach($options as $option_id => $option_text) {
+                        $is_user_answer = ($option_id == $user_ans_id);
+                        $is_correct_answer = ($option_id == $correct_ans_id);
+                        $extra_class = ''; $icon = '';
+                        if ($is_correct_answer) { $extra_class = 'list-group-item-success'; $icon = ' <i class="fas fa-check-circle"></i> <strong>(Jawaban Benar)</strong>'; }
+                        if ($is_user_answer && !$is_correct_answer) { $extra_class = 'list-group-item-danger'; $icon = ' <i class="fas fa-times-circle"></i> <strong>(Jawaban Kamu)</strong>'; }
+                        elseif ($is_user_answer && $is_correct_answer) { $icon = ' <i class="fas fa-check-circle"></i> <strong>(Jawaban Kamu Benar)</strong>'; }
+                        echo '<li class="list-group-item ' . $extra_class . '">' . htmlspecialchars($option_text) . $icon . '</li>';
+                    }
+                    echo '</ul>';
+                    if (!empty($question['explanation'])) {
+                        echo '<div class="alert alert-info mt-3"><strong><i class="fas fa-lightbulb"></i> Penjelasan:</strong><br>' . nl2br(htmlspecialchars($question['explanation'])) . '</div>';
+                    }
+                    echo '</div></div>';
+                }
+                echo '<div class="mt-4 text-center"><a href="account.php?q=1" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali ke Home</a></div>';
+                ?>
+            <?php endif; ?>
 
-//ranking start
-if(@$_GET['q']== 3) 
-{
-$q=mysqli_query($con,"SELECT * FROM rank  ORDER BY score DESC " )or die('Error223');
-echo  '<div class="panel title">
-<table class="table table-striped title1" >
-<tr style="color:black"><td><b>Rank</b></td><td><b>Name</b></td><td><b>Gender</b></td><td><b>College</b></td><td><b>Score</b></td></tr>';
-$c=0;
-while($row=mysqli_fetch_array($q) )
-{
-$e=$row['email'];
-$s=$row['score'];
-$q12=mysqli_query($con,"SELECT * FROM user WHERE email='$e' " )or die('Error231');
-while($row=mysqli_fetch_array($q12) )
-{
-$name=$row['name'];
-$gender=$row['gender'];
-$college=$row['college'];
-}
-$c++;
-echo '<tr><td style="color:#99cc32"><b>'.$c.'</b></td><td>'.$name.'</td><td>'.$gender.'</td><td>'.$college.'</td><td>'.$s.'</td><td>';
-}
-echo '</table></div>';}
-?>
+            <!-- ======================================================= -->
+            <!-- == BAGIAN BARU UNTUK MATERI (q=5) == -->
+            <!-- ======================================================= -->
+            <?php if(@$_GET['q']==5): ?>
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="mb-4"><i class="fas fa-book"></i> Materi Belajar</h3>
+                </div>
+                <?php
+                    // Query untuk mengambil materi dan nama guru yang mengunggah
+                    $result = mysqli_query($con, "SELECT m.*, a.name as teacher_name FROM materials m JOIN admin a ON m.uploaded_by = a.email ORDER BY m.upload_date DESC");
+                    if(mysqli_num_rows($result) > 0) {
+                        while($row = mysqli_fetch_array($result)) {
+                            echo '<div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="video-responsive">
+                                            <iframe src="https://www.youtube.com/embed/'.htmlspecialchars($row['video_id']).'" title="'.htmlspecialchars($row['title']).'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        </div>
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title">'.htmlspecialchars($row['title']).'</h5>
+                                            <p class="card-text text-muted flex-grow-1">'.htmlspecialchars($row['description']).'</p>
+                                            <small class="text-muted">Diunggah oleh: '.htmlspecialchars($row['teacher_name']).'</small>
+                                        </div>
+                                        <div class="card-footer bg-white border-0">
+                                            <small class="text-muted">Pada: '.date('d M Y', strtotime($row['upload_date'])).'</small>
+                                        </div>
+                                    </div>
+                                  </div>';
+                        }
+                    } else {
+                        echo '<div class="col-12"><div class="alert alert-info">Belum ada materi yang diunggah oleh guru.</div></div>';
+                    }
+                ?>
+            </div>
+            <?php endif; ?>
 
+        </div>
+    </div>
+</div>
 
-
-</div></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

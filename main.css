@@ -1,0 +1,89 @@
+/* GAYA DASAR YANG TELAH DIPERBARUI */
+body {
+    overflow-x: hidden;
+    width: 100%;
+    font-family: 'Lato', sans-serif;
+    background-color: #f8f9fa; /* Latar belakang abu-abu terang */
+    color: #333;
+}
+
+/* HEADER YANG LEBIH BAIK */
+.header {
+    background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradien biru/ungu modern */
+    color: white;
+    padding: 15px 0;
+    height: auto;
+}
+
+.header .log1, .header .log {
+    color: white;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.header .log:hover {
+    text-decoration: underline;
+}
+
+/* NAVBAR DASBOR */
+.navbar.title1 {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+
+.navbar.title1 .navbar-brand {
+    color: #333 !important;
+    font-weight: 600;
+}
+
+.navbar.title1 .nav-link {
+    color: #555 !important;
+}
+
+.navbar.title1 .nav-item.active .nav-link {
+    color: #2575fc !important;
+    font-weight: bold;
+}
+
+
+/* KARTU (PENGGANTI PANEL) */
+.card {
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.table {
+    margin-bottom: 0; /* Hapus margin bawah di dalam kartu */
+}
+
+/* TOMBOL MODERN */
+.btn-primary {
+    background-color: #2575fc;
+    border-color: #2575fc;
+    border-radius: 20px;
+    padding: 8px 25px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1a64d8;
+    border-color: #1a64d8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* PESAN Peringatan */
+.alert {
+    border-radius: 8px;
+}

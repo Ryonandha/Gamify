@@ -1,409 +1,432 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?php
+// Selalu letakkan session_start() di paling atas
+session_start();
+include_once 'dbConnection.php';
+
+// Redirect jika guru belum login
+if (!isset($_SESSION['email'])) {
+    header("location:index.php");
+    exit();
+} else {
+    $email = $_SESSION['email'];
+    $name = $_SESSION['name'];
+}
+?>
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Guru - Ujian Ceria</title>
 
-<title>Online examiner</title>
-<link  rel="stylesheet" href="css/bootstrap.min.css"/>
- <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
- <link rel="stylesheet" href="css/main.css">
- <link  rel="stylesheet" href="css/font.css">
- <script src="js/jquery.js" type="text/javascript"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <script src="js/bootstrap.min.js"  type="text/javascript"></script>
- 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-
-<script>
-$(function () {
-    $(document).on( 'scroll', function(){
-        console.log('scroll top : ' + $(window).scrollTop());
-        if($(window).scrollTop()>=$(".logo").height())
-        {
-             $(".navbar").addClass("navbar-fixed-top");
+    <style>
+        :root {
+            --primary-color: #2962ff;
+            --secondary-color: #00b0ff;
+            --background-color: #f4f7fc;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --header-color: #fff;
         }
-
-        if($(window).scrollTop()<$(".logo").height())
-        {
-             $(".navbar").removeClass("navbar-fixed-top");
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
         }
-    });
-});</script>
+        .navbar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: var(--header-color) !important;
+            font-weight: 500;
+        }
+        .nav-link.active, .nav-link:hover, .dropdown-item:active {
+            font-weight: 600;
+        }
+        .nav-link i {
+            margin-right: 8px;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+        .card-header {
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        .card-header i {
+            margin-right: 10px;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .video-responsive {
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            height: 0;
+            border-radius: 8px;
+        }
+        .video-responsive iframe {
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+    </style>
 </head>
 
-<body  style="background:#eee;">
-<div class="header">
-<div class="row">
-<div class="col-lg-6">
-</div>
-<?php
- include_once 'dbConnection.php';
-session_start();
-$email=$_SESSION['email'];
-  if(!(isset($_SESSION['email']))){
-header("location:index.php");
+<body>
 
-}
-else
-{
-$name = $_SESSION['name'];
-
-include_once 'dbConnection.php';
-echo '<span class="pull-right top title1" ><span class="log1"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;&nbsp;Hello,</span> <a href="dash.php" class="log log1">'.$email.'</a>&nbsp;|&nbsp;<a href="logout.php?q=dash.php" class="log"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Signout</button></a></span>';
-}?>
-
-</div></div>
-<!-- admin start-->
-
-<!--navigation menu-->
-<nav class="navbar navbar-default title1">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="dash.php?q=0"><b>Dashboard - TEACHER</b></a>
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="dash.php?q=0"><b><i class="fas fa-chalkboard-teacher"></i> Dashboard Guru</b></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link <?php if(@$_GET['q']==0) echo 'active'; ?>" href="dash.php?q=0"><i class="fas fa-home"></i>Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(@$_GET['q']==1) echo 'active'; ?>" href="dash.php?q=1"><i class="fas fa-clipboard-list"></i>Skor Siswa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if(@$_GET['q']==2) echo 'active'; ?>" href="dash.php?q=2"><i class="fas fa-trophy"></i>Peringkat</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?php if(in_array(@$_GET['q'], [4, 5, 6])) echo 'active'; ?>" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-edit"></i>Manajemen Kuis
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="dash.php?q=4">Tambah Kuis</a></li>
+                        <li><a class="dropdown-item" href="dash.php?q=6">Edit Kuis</a></li>
+                        <li><a class="dropdown-item" href="dash.php?q=5">Hapus Kuis</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?php if(in_array(@$_GET['q'], [7, 8])) echo 'active'; ?>" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-book-open"></i>Manajemen Materi
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="dash.php?q=7">Tambah Materi</a></li>
+                        <li><a class="dropdown-item" href="dash.php?q=8">Lihat Materi</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <span class="navbar-text">
+                <i class="fas fa-user-circle"></i> Halo, <?php echo htmlspecialchars($name); ?> | <a href="logout.php?q=dash.php" class="text-white">Keluar <i class="fas fa-sign-out-alt"></i></a>
+            </span>
+        </div>
     </div>
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li <?php if(@$_GET['q']==0) echo'class="active"'; ?>><a href="dash.php?q=0">Home<span class="sr-only">(current)</span></a></li>
-        <li <?php if(@$_GET['q']==1) echo'class="active"'; ?>><a href="dash.php?q=1">Scores</a></li>  
-		<li <?php if(@$_GET['q']==2) echo'class="active"'; ?>><a href="dash.php?q=2">Ranking</a></li>
-		<!---- <li <?php if(@$_GET['q']==3) echo'class="active"'; ?>><a href="dash.php?q=3">Feedback</a></li>  ---->
-        <li class="dropdown <?php if(@$_GET['q']==4 || @$_GET['q']==5) echo'active'; ?>">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quiz<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="dash.php?q=4">Add Quiz</a></li>
-            <li><a href="dash.php?q=5">Remove Quiz</a></li>
-          </ul>
-        </li>
-      </ul>
-          </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
 </nav>
-<!--navigation menu closed-->
-<div class="container"><!--container start-->
-<div class="row">
-<div class="col-md-12">
-<!--home start-->
 
-<?php if(@$_GET['q']==0) {
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-12">
 
-$result = mysqli_query($con,"SELECT * FROM quiz where email='$email' ORDER BY date DESC") or die('Error');
-echo  '<div class="panel"><table class="table table-striped title1">
-<tr><td><b>S.N.</b></td><td><b>Topic</b></td><td><b>Total question</b></td><td><b>Marks</b></td><td><b>positive</b></td><td><b>negative</b></td><td><b>Time limit</b></td><td></td></tr>';
-$c=1;
-while($row = mysqli_fetch_array($result)) {
-	$title = $row['title'];
-	$total = $row['total'];
-	$sahi = $row['sahi'];
-  $wrong = $row['wrong'];
-    $time = $row['time'];
-	$eid = $row['eid'];
-$q12=mysqli_query($con,"SELECT score FROM history WHERE eid='$eid' AND email='$email'" )or die('Error98');
-$rowcount=mysqli_num_rows($q12);	
-if($rowcount == 0){
-	echo '<tr><td>'.$c++.'</td><td>'.$title.'</td><td>'.$total.'</td><td>'.$sahi*$total.'</td><td>'.$sahi.'</td><td>'.$wrong.'</td><td>'.$time.'&nbsp;min</td>
-	</tr>';
-}
-else
-{
-echo '<tr style="color:#99cc32"><td>'.$c++.'</td><td>'.$title.'&nbsp;<span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td><td>'.$total.'</td><td>'.$sahi*$total.'</td><td>'.$time.'&nbsp;min</td>
-	</tr>';
-}
-}
-$c=0;
-echo '</table></div>';
+        <?php if(@$_GET['q']==0): ?>
+            <?php
+            $result = mysqli_query($con, "SELECT * FROM quiz WHERE email='$email' ORDER BY date DESC") or die('Error');
+            echo '<div class="card">
+                    <div class="card-header"><i class="fas fa-list-alt"></i>Daftar Kuis yang Anda Buat</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead><tr><th>No.</th><th>Topik</th><th>Total Soal</th><th>Poin Benar</th><th>Waktu</th><th>Aksi</th></tr></thead>
+                                <tbody>';
+            $c = 1;
+            while ($row = mysqli_fetch_array($result)) {
+                echo '<tr>
+                        <td>'.$c++.'</td>
+                        <td>'.htmlspecialchars($row['title']).'</td>
+                        <td>'.$row['total'].'</td>
+                        <td>'.$row['sahi'].'</td>
+                        <td>'.$row['time'].'&nbsp;menit</td>
+                        <td>
+                            <a href="dash.php?q=6&eid='.$row['eid'].'" class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit Soal
+                            </a>
+                        </td>
+                      </tr>';
+            }
+            echo '</tbody></table></div></div></div>';
+            ?>
+        <?php endif; ?>
 
-}
+        <?php if(@$_GET['q']==1): ?>
+            <?php
+            $q = mysqli_query($con, "SELECT distinct q.title,u.name,u.college,h.score,h.date from user u,history h,quiz q where q.email='$email' and q.eid=h.eid and h.email=u.email order by q.eid DESC") or die('Error197');
+            echo '<div class="card">
+                    <div class="card-header"><i class="fas fa-clipboard-list"></i>Detail Skor Siswa</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead><tr><th>No.</th><th>Kuis</th><th>Nama Siswa</th><th>Sekolah/NIS</th><th>Skor</th><th>Tanggal</th></tr></thead>
+                                <tbody>';
+            $c = 1;
+            while ($row = mysqli_fetch_array($q)) {
+                echo '<tr>
+                        <td>'.$c++.'</td>
+                        <td>'.htmlspecialchars($row['title']).'</td>
+                        <td>'.htmlspecialchars($row['name']).'</td>
+                        <td>'.htmlspecialchars($row['college']).'</td>
+                        <td>'.$row['score'].'</td>
+                        <td>'.$row['date'].'</td>
+                      </tr>';
+            }
+            echo '</tbody></table></div></div></div>';
+            ?>
+        <?php endif; ?>
+        
+        <?php if(@$_GET['q']==2): ?>
+            <?php
+            $q = mysqli_query($con, "SELECT * FROM rank ORDER BY score DESC") or die('Error223');
+            echo '<div class="card">
+                    <div class="card-header"><i class="fas fa-trophy"></i>Peringkat Umum Siswa</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead><tr><th>Peringkat</th><th>Nama</th><th>Gender</th><th>Sekolah/NIS</th><th>Skor</th></tr></thead>
+                                <tbody>';
+            $c = 0;
+            while ($row = mysqli_fetch_array($q)) {
+                $e = $row['email'];
+                $s = $row['score'];
+                $q12 = mysqli_query($con, "SELECT * FROM user WHERE email='$e'") or die('Error231');
+                if ($row2 = mysqli_fetch_array($q12)) {
+                    $c++;
+                    echo '<tr>
+                            <td class="fw-bold">'.$c.'</td>
+                            <td>'.htmlspecialchars($row2['name']).'</td>
+                            <td>'.($row2['gender'] == 'M' ? 'Laki-laki' : 'Perempuan').'</td>
+                            <td>'.htmlspecialchars($row2['college']).'</td>
+                            <td>'.$s.'</td>
+                          </tr>';
+                }
+            }
+            echo '</tbody></table></div>
+                  <div class="card-footer text-end">
+                      <form action="send_message.php" method="POST">
+                          <input type="hidden" name="action" value="send_message_auto">
+                          <button type="submit" class="btn btn-primary" onclick="return confirm(\'Yakin ingin mengirim pesan ke 5 teratas dan 5 terbawah?\')">
+                              <i class="fas fa-envelope"></i> Kirim Apresiasi Otomatis
+                          </button>
+                      </form>
+                  </div></div>';
+            ?>
+        <?php endif; ?>
 
+        <?php if(@$_GET['q']==4 && !(@$_GET['step'])): ?>
+            <div class="card">
+                <div class="card-header"><i class="fas fa-plus-circle"></i>Buat Kuis Baru</div>
+                <div class="card-body">
+                    <form name="form" action="update.php?q=addquiz" method="POST">
+                        <div class="mb-3"><label for="name" class="form-label">Judul Kuis</label><input id="name" name="name" placeholder="Contoh: Matematika Dasar Bab 1" class="form-control" type="text" required></div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3"><label for="total" class="form-label">Jumlah Pertanyaan</label><input id="total" name="total" placeholder="Contoh: 10" class="form-control" type="number" required></div>
+                            <div class="col-md-6 mb-3"><label for="time" class="form-label">Waktu Pengerjaan (Menit)</label><input id="time" name="time" placeholder="Contoh: 20" class="form-control" min="1" type="number" required></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3"><label for="right" class="form-label">Poin per Jawaban Benar</label><input id="right" name="right" placeholder="Contoh: 10" class="form-control" min="0" type="number" required></div>
+                            <div class="col-md-6 mb-3"><label for="wrong" class="form-label">Poin Minus per Jawaban Salah</label><input id="wrong" name="wrong" placeholder="Contoh: 5 (isi tanpa tanda minus)" class="form-control" min="0" type="number" required></div>
+                        </div>
+                        <div class="mb-3"><label for="desc" class="form-label">Deskripsi Singkat</label><textarea rows="4" name="desc" class="form-control" placeholder="Tulis deskripsi singkat tentang kuis ini..."></textarea></div>
+                        <div class="d-grid"><button type="submit" class="btn btn-primary"><i class="fas fa-arrow-right"></i> Lanjut ke Tahap Soal</button></div>
+                    </form>
+                </div>
+            </div>
+        <?php endif; ?>
 
+        <?php if(@$_GET['q']==4 && (@$_GET['step'])==2): ?>
+            <div class="card">
+                <div class="card-header"><i class="fas fa-tasks"></i>Masukkan Detail Pertanyaan</div>
+                <div class="card-body">
+                    <form name="form" action="update.php?q=addqns&n=<?=@$_GET['n']?>&eid=<?=@$_GET['eid']?>&ch=4" method="POST">
+                        <?php for ($i = 1; $i <= @$_GET['n']; $i++): ?>
+                          <fieldset class="border p-3 mb-4 rounded"><legend class="float-none w-auto px-3 h6">Pertanyaan ke-<?= $i ?></legend>
+                              <div class="mb-3"><label for="qns<?= $i ?>" class="form-label">Teks Pertanyaan</label><textarea rows="3" name="qns<?= $i ?>" class="form-control" placeholder="Tuliskan pertanyaan nomor <?= $i ?> di sini..." required></textarea></div>
+                              <div class="mb-3"><label for="explanation<?= $i ?>" class="form-label">Penjelasan Jawaban</label><textarea rows="3" name="explanation<?= $i ?>" class="form-control" placeholder="Jelaskan mengapa jawaban ini benar..."></textarea></div>
+                              <div class="row">
+                                  <div class="col-md-6 mb-3"><input name="<?= $i ?>1" class="form-control" placeholder="Pilihan A" type="text" required></div>
+                                  <div class="col-md-6 mb-3"><input name="<?= $i ?>2" class="form-control" placeholder="Pilihan B" type="text" required></div>
+                                  <div class="col-md-6 mb-3"><input name="<?= $i ?>3" class="form-control" placeholder="Pilihan C" type="text" required></div>
+                                  <div class="col-md-6 mb-3"><input name="<?= $i ?>4" class="form-control" placeholder="Pilihan D" type="text" required></div>
+                              </div>
+                              <div class="mb-3"><label for="ans<?= $i ?>" class="form-label">Kunci Jawaban</label><select id="ans<?= $i ?>" name="ans<?= $i ?>" class="form-select" required><option selected disabled value="">Pilih jawaban yang benar</option><option value="a">Pilihan A</option><option value="b">Pilihan B</option><option value="c">Pilihan C</option><option value="d">Pilihan D</option></select></div>
+                          </fieldset>
+                        <?php endfor; ?>
+                        <div class="d-grid"><button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan Semua Pertanyaan</button></div>
+                    </form>
+                </div>
+            </div>
+        <?php endif; ?>
+        
+        <?php if(@$_GET['q']==5): ?>
+            <?php
+            $result = mysqli_query($con, "SELECT * FROM quiz WHERE email='$email' ORDER BY date DESC") or die('Error');
+            echo '<div class="card"><div class="card-header"><i class="fas fa-trash-alt"></i>Hapus Kuis</div><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>No.</th><th>Topik</th><th>Total Soal</th><th>Total Poin</th><th>Waktu</th><th>Aksi</th></tr></thead><tbody>';
+            $c = 1;
+            while ($row = mysqli_fetch_array($result)) {
+                echo '<tr><td>'.$c++.'</td><td>'.htmlspecialchars($row['title']).'</td><td>'.$row['total'].'</td><td>'.($row['sahi'] * $row['total']).'</td><td>'.$row['time'].'&nbsp;menit</td><td><a href="update.php?q=rmquiz&eid='.$row['eid'].'" class="btn btn-danger btn-sm" onclick="return confirm(\'Anda yakin ingin menghapus kuis ini?\')"><i class="fas fa-trash"></i> Hapus</a></td></tr>';
+            }
+            echo '</tbody></table></div></div></div>';
+            ?>
+        <?php endif; ?>
 
-//score details
-if(@$_GET['q']== 1) 
-{
-  $q=mysqli_query($con,"SELECT distinct q.title,u.name,u.college,h.score,h.date from user u,history h,quiz q where q.email='$email' and q.eid=h.eid and h.email=u.email order by q.eid DESC")or die('Error197');
-//$q=mysqli_query($con,"SELECT * FROM history WHERE email='$email' ORDER BY date DESC " )or die('Error197');
-echo  '<div class="panel title">
-<table class="table table-striped title1" >
-<tr style="color:black"><td><b>S.N.</b></td><td><b>Title</b></td><td><b>Name</b></td><td><b>College</b></td><td><b>Score<b></td><td><b>Date</b></td>';
-$c=0;
-while($row=mysqli_fetch_array($q) )
-{
-$title=$row['title'];
-$name=$row['name'];
-$college=$row['college'];
-$score=$row['score'];
-$date=$row['date'];
-echo '<tr><td>'.$c++.'</td><td>'.$title.'</td><td>'.$name.'</td><td>'.$college.'</td><td>'.$score.'</td><td>'.$date.'</td></tr>';
-}
+        <?php if(@$_GET['q']==6): ?>
+            <div class="card">
+                <div class="card-header"><i class="fas fa-edit"></i>Edit Kuis dan Soal</div>
+                <div class="card-body">
+                    <?php if (!isset($_GET['eid'])): ?>
+                        <h5 class="card-title">Pilih Kuis yang Ingin Diedit</h5>
+                        <p class="card-text">Silakan pilih salah satu kuis dari daftar di bawah ini untuk mulai mengedit pertanyaan.</p>
+                        <div class="table-responsive"><table class="table table-hover"><thead><tr><th>Topik</th><th>Jumlah Soal</th><th>Aksi</th></tr></thead><tbody>
+                        <?php
+                            $result = mysqli_query($con, "SELECT * FROM quiz WHERE email='$email' ORDER BY date DESC") or die('Error');
+                            if(mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_array($result)) {
+                                    echo '<tr><td>'.htmlspecialchars($row['title']).'</td><td>'.$row['total'].'</td><td><a href="dash.php?q=6&eid='.$row['eid'].'" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Edit</a></td></tr>';
+                                }
+                            } else {
+                                echo '<tr><td colspan="3" class="text-center">Anda belum membuat kuis apapun.</td></tr>';
+                            }
+                        ?>
+                        </tbody></table></div>
+                    <?php else: ?>
+                        <?php
+                            $eid = @$_GET['eid'];
+                            $quiz_q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$eid' AND email='$email'");
+                            if(mysqli_num_rows($quiz_q) > 0):
+                                $quiz_data = mysqli_fetch_array($quiz_q);
+                        ?>
+                        <h5 class="card-title">Mengedit Soal untuk Kuis: "<?= htmlspecialchars($quiz_data['title']) ?>"</h5><hr>
+                        <form name="form" action="update.php?q=editqns&eid=<?= $eid ?>" method="POST">
+                            <?php
+                                $qns_q = mysqli_query($con, "SELECT * FROM questions WHERE eid='$eid' ORDER BY sn ASC");
+                                while ($qns_data = mysqli_fetch_array($qns_q)):
+                                    $qid = $qns_data['qid'];
+                            ?>
+                            <fieldset class="border p-3 mb-4 rounded bg-light"><legend class="float-none w-auto px-3 h6">Pertanyaan ke-<?= $qns_data['sn'] ?></legend>
+                                <input type="hidden" name="qid<?= $qns_data['sn'] ?>" value="<?= $qid ?>">
+                                <div class="mb-3"><label class="form-label">Teks Pertanyaan</label><textarea rows="3" name="qns<?= $qns_data['sn'] ?>" class="form-control" required><?= htmlspecialchars($qns_data['qns']) ?></textarea></div>
+                                <div class="mb-3"><label class="form-label">Penjelasan Jawaban</label><textarea rows="3" name="explanation<?= $qns_data['sn'] ?>" class="form-control"><?= htmlspecialchars($qns_data['explanation']) ?></textarea></div>
+                                <div class="row">
+                                    <?php
+                                        $opt_q = mysqli_query($con, "SELECT * FROM options WHERE qid='$qid'");
+                                        $ans_q = mysqli_query($con, "SELECT * FROM answer WHERE qid='$qid'");
+                                        $ans_id = mysqli_fetch_array($ans_q)['ansid'];
+                                        $options = [];
+                                        while($opt = mysqli_fetch_array($opt_q)) { $options[$opt['optionid']] = $opt['option']; }
+                                        $option_keys = ['A', 'B', 'C', 'D'];
+                                        $i = 0;
+                                        foreach($options as $optid => $opt_text):
+                                    ?>
+                                    <div class="col-md-6 mb-3"><label class="form-label">Pilihan <?= $option_keys[$i] ?></label><input name="opt_<?= $qns_data['sn'] ?>_<?= $optid ?>" class="form-control" value="<?= htmlspecialchars($opt_text) ?>" type="text" required></div>
+                                    <?php $i++; endforeach; ?>
+                                </div>
+                                <div class="mb-3"><label class="form-label">Kunci Jawaban</label><select name="ans<?= $qns_data['sn'] ?>" class="form-select" required>
+                                    <?php
+                                    $i = 0;
+                                    foreach($options as $optid => $opt_text):
+                                    ?>
+                                    <option value="<?= $optid ?>" <?= ($optid == $ans_id) ? 'selected' : '' ?>>Pilihan <?= $option_keys[$i] ?></option>
+                                    <?php $i++; endforeach; ?>
+                                </select></div>
+                            </fieldset>
+                            <?php endwhile; ?>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="dash.php?q=6" class="btn btn-secondary me-md-2">Batal</a>
+                                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
+                            </div>
+                        </form>
+                        <?php else: ?>
+                            <div class="alert alert-danger">Kuis tidak ditemukan atau Anda tidak memiliki akses untuk mengeditnya.</div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
 
-//$q23=mysqli_query($con,"SELECT title FROM quiz WHERE  eid='$eid' " )or die('Error208');
-//while($row=mysqli_fetch_array($q23) )
-//{
-//$title=$row['title'];
-//}
-//$c++;
-//echo '<tr><td>'.$c.'</td><td>'.$title.'</td><td>'.$qa.'</td><td>'.$r.'</td><td>'.$w.'</td><td>'.$s.'</td></tr>';
-//}
-echo'</table></div>';
-}
+        <!-- ======================================================= -->
+        <!-- == BLOK KODE UNTUK MANAJEMEN MATERI (q=7 dan q=8) == -->
+        <!-- ======================================================= -->
 
+        <?php if(@$_GET['q']==7): ?>
+        <div class="card">
+            <div class="card-header"><i class="fas fa-plus-circle"></i>Tambah Materi Video Baru</div>
+            <div class="card-body">
+                <form name="form" action="update.php?q=add_material" method="POST">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Judul Materi</label>
+                        <input id="title" name="title" placeholder="Contoh: Belajar Penjumlahan Dasar" class="form-control" type="text" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="youtube_link" class="form-label">Link Video YouTube</label>
+                        <input id="youtube_link" name="youtube_link" placeholder="Contoh: https://www.youtube.com/watch?v=xxxxxxxxxxx" class="form-control" type="url" required>
+                        <div class="form-text">Salin dan tempel link lengkap video dari YouTube.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Deskripsi Singkat</label>
+                        <textarea rows="4" name="description" class="form-control" placeholder="Jelaskan sedikit tentang isi video ini..."></textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Materi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <?php endif; ?>
 
-//ranking start
-if(@$_GET['q']== 2) 
-{
-$q=mysqli_query($con,"SELECT * FROM rank  ORDER BY score DESC " )or die('Error223');
-echo  '<div class="panel title">
-<table class="table table-striped title1" >
-<tr><td><b>Rank</b></td><td><b>Name</b></td><td><b>Gender</b></td><td><b>College</b></td><td><b>Score</b></td></tr>';
-$c=0;
-while($row=mysqli_fetch_array($q) )
-{
-$e=$row['email'];
-$s=$row['score'];
-$q12=mysqli_query($con,"SELECT * FROM user WHERE email='$e' " )or die('Error231');
-while($row=mysqli_fetch_array($q12) )
-{
-$name=$row['name'];
-$gender=$row['gender'];
-$college=$row['college'];
-}
-$c++;
-echo '<tr><td style="color:#99cc32"><b>'.$c.'</b></td><td>'.$name.'</td><td>'.$gender.'</td><td>'.$college.'</td><td>'.$s.'</td><td>';
-}
-echo '</table></div>';}
-
-?>
-
-
-<!--home closed-->
-<!--users start-->
-
-
-
-<!--user end-->
-
-<!--feedback start-->
-
-<!--feedback closed-->
-
-<!--feedback reading portion start-->
-<?php if(@$_GET['fid']) {
-echo '<br />';
-$id=@$_GET['fid'];
-$result = mysqli_query($con,"SELECT * FROM feedback WHERE id='$id' ") or die('Error');
-while($row = mysqli_fetch_array($result)) {
-	$name = $row['name'];
-	$subject = $row['subject'];
-	$date = $row['date'];
-	$date= date("d-m-Y",strtotime($date));
-	$time = $row['time'];
-	$feedback = $row['feedback'];
-	
-echo '<div class="panel"<a title="Back to Archive" href="update.php?q1=2"><b><span class="glyphicon glyphicon-level-up" aria-hidden="true"></span></b></a><h2 style="text-align:center; margin-top:-15px;font-family: "Ubuntu", sans-serif;"><b>'.$subject.'</b></h1>';
- echo '<div class="mCustomScrollbar" data-mcs-theme="dark" style="margin-left:10px;margin-right:10px; max-height:450px; line-height:35px;padding:5px;"><span style="line-height:35px;padding:5px;">-&nbsp;<b>DATE:</b>&nbsp;'.$date.'</span>
-<span style="line-height:35px;padding:5px;">&nbsp;<b>Time:</b>&nbsp;'.$time.'</span><span style="line-height:35px;padding:5px;">&nbsp;<b>By:</b>&nbsp;'.$name.'</span><br />'.$feedback.'</div></div>';}
-}?>
-<!--Feedback reading portion closed-->
-
-<!--add quiz start-->
-<?php
-if(@$_GET['q']==4 && !(@$_GET['step']) ) {
-echo ' 
-<div class="row">
-<span class="title1" style="margin-left:40%;font-size:30px;"><b>Enter Quiz Details</b></span><br /><br />
- <div class="col-md-3"></div><div class="col-md-6">   <form class="form-horizontal title1" name="form" action="update.php?q=addquiz"  method="POST">
-<fieldset>
-
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="name"></label>  
-  <div class="col-md-12">
-  <input id="name" name="name" placeholder="Enter Quiz title" class="form-control input-md" type="text">
-    
-  </div>
+        <?php if(@$_GET['q']==8): ?>
+        <div class="card">
+            <div class="card-header"><i class="fas fa-video"></i>Daftar Materi yang Telah Diunggah</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead><tr><th>No.</th><th>Judul Materi</th><th>Video</th><th>Aksi</th></tr></thead>
+                        <tbody>
+                        <?php
+                            $result = mysqli_query($con, "SELECT * FROM materials WHERE uploaded_by='$email' ORDER BY upload_date DESC") or die('Error');
+                            if(mysqli_num_rows($result) > 0) {
+                                $c = 1;
+                                while ($row = mysqli_fetch_array($result)) {
+                                    echo '<tr>
+                                            <td>'.$c++.'</td>
+                                            <td>'.htmlspecialchars($row['title']).'</td>
+                                            <td><div class="video-responsive"><iframe src="https://www.youtube.com/embed/'.$row['video_id'].'" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></td>
+                                            <td><a href="update.php?q=delete_material&id='.$row['id'].'" class="btn btn-danger btn-sm" onclick="return confirm(\'Anda yakin ingin menghapus materi ini?\')"><i class="fas fa-trash"></i> Hapus</a></td>
+                                          </tr>';
+                                }
+                            } else {
+                                echo '<tr><td colspan="4" class="text-center">Anda belum mengunggah materi apapun.</td></tr>';
+                            }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+        
+        </div>
+    </div>
 </div>
 
-
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="total"></label>  
-  <div class="col-md-12">
-  <input id="total" name="total" placeholder="Enter total number of questions" class="form-control input-md" type="number">
-    
-  </div>
-</div>
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="right"></label>  
-  <div class="col-md-12">
-  <input id="right" name="right" placeholder="Enter marks on right answer" class="form-control input-md" min="0" type="number">
-    
-  </div>
-</div>
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="wrong"></label>  
-  <div class="col-md-12">
-  <input id="wrong" name="wrong" placeholder="Enter minus marks on wrong answer without sign" class="form-control input-md" min="0" type="number">
-    
-  </div>
-</div>
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="time"></label>  
-  <div class="col-md-12">
-  <input id="time" name="time" placeholder="Enter time limit for test in minute" class="form-control input-md" min="1" type="number">
-    
-  </div>
-</div>
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="tag"></label>  
-  <div class="col-md-12">
-  <input id="tag" name="tag" placeholder="Enter #tag which is used for searching" class="form-control input-md" type="text">
-    
-  </div>
-</div>
-
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="desc"></label>  
-  <div class="col-md-12">
-  <textarea rows="8" cols="8" name="desc" class="form-control" placeholder="Write description here..."></textarea>  
-  </div>
-</div>
-
-
-<div class="form-group">
-  <label class="col-md-12 control-label" for=""></label>
-  <div class="col-md-12"> 
-    <input  type="submit" style="margin-left:45%" class="btn btn-primary" value="Submit" class="btn btn-primary"/>
-  </div>
-</div>
-
-</fieldset>
-</form></div>';
-
-
-
-}
-?>
-<!--add quiz end-->
-
-<!--add quiz step2 start-->
-<?php
-if(@$_GET['q']==4 && (@$_GET['step'])==2 ) {
-echo ' 
-<div class="row">
-<span class="title1" style="margin-left:40%;font-size:30px;"><b>Enter Question Details</b></span><br /><br />
- <div class="col-md-3"></div><div class="col-md-6"><form class="form-horizontal title1" name="form" action="update.php?q=addqns&n='.@$_GET['n'].'&eid='.@$_GET['eid'].'&ch=4 "  method="POST">
-<fieldset>
-';
- 
- for($i=1;$i<=@$_GET['n'];$i++)
- {
-echo '<b>Question number&nbsp;'.$i.'&nbsp;:</><br /><!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="qns'.$i.' "></label>  
-  <div class="col-md-12">
-  <textarea rows="3" cols="5" name="qns'.$i.'" class="form-control" placeholder="Write question number '.$i.' here..."></textarea>  
-  </div>
-</div>
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="'.$i.'1"></label>  
-  <div class="col-md-12">
-  <input id="'.$i.'1" name="'.$i.'1" placeholder="Enter option a" class="form-control input-md" type="text">
-    
-  </div>
-</div>
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="'.$i.'2"></label>  
-  <div class="col-md-12">
-  <input id="'.$i.'2" name="'.$i.'2" placeholder="Enter option b" class="form-control input-md" type="text">
-    
-  </div>
-</div>
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="'.$i.'3"></label>  
-  <div class="col-md-12">
-  <input id="'.$i.'3" name="'.$i.'3" placeholder="Enter option c" class="form-control input-md" type="text">
-    
-  </div>
-</div>
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-12 control-label" for="'.$i.'4"></label>  
-  <div class="col-md-12">
-  <input id="'.$i.'4" name="'.$i.'4" placeholder="Enter option d" class="form-control input-md" type="text">
-    
-  </div>
-</div>
-<br />
-<b>Correct answer</b>:<br />
-<select id="ans'.$i.'" name="ans'.$i.'" placeholder="Choose correct answer " class="form-control input-md" >
-   <option value="a">Select answer for question '.$i.'</option>
-  <option value="a">option a</option>
-  <option value="b">option b</option>
-  <option value="c">option c</option>
-  <option value="d">option d</option> </select><br /><br />'; 
- }
-    
-echo '<div class="form-group">
-  <label class="col-md-12 control-label" for=""></label>
-  <div class="col-md-12"> 
-    <input  type="submit" style="margin-left:45%" class="btn btn-primary" value="Submit" class="btn btn-primary"/>
-  </div>
-</div>
-
-</fieldset>
-</form></div>';
-
-
-
-}
-?><!--add quiz step 2 end-->
-
-<!--remove quiz-->
-<?php if(@$_GET['q']==5) {
-
-$result = mysqli_query($con,"SELECT * FROM quiz where email='$email' ORDER BY date DESC") or die('Error');
-echo  '<div class="panel"><table class="table table-striped title1">
-<tr><td><b>S.N.</b></td><td><b>Topic</b></td><td><b>Total question</b></td><td><b>Marks</b></td><td><b>Time limit</b></td><td></td></tr>';
-$c=1;
-while($row = mysqli_fetch_array($result)) {
-	$title = $row['title'];
-	$total = $row['total'];
-	$sahi = $row['sahi'];
-    $time = $row['time'];
-	$eid = $row['eid'];
-	echo '<tr><td>'.$c++.'</td><td>'.$title.'</td><td>'.$total.'</td><td>'.$sahi*$total.'</td><td>'.$time.'&nbsp;min</td>
-	<td><b><a href="update.php?q=rmquiz&eid='.$eid.'" class="pull-right btn sub1" style="margin:0px;background:red"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Remove</b></span></a></b></td></tr>';
-}
-$c=0;
-echo '</table></div>';
-
-}
-?>
-
-
-</div><!--container closed-->
-</div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</ht

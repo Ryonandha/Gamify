@@ -17,7 +17,8 @@ session_start();
 $_SESSION["email"] = $email;
 $_SESSION["name"] = $name;
 
-header("location:account.php?q=1");
+header("location:headdash.php?q=7");
+
 }
 else
 {
