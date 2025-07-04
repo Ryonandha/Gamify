@@ -220,8 +220,19 @@ include_once 'dbConnection.php';
     $result = mysqli_query($con,"SELECT * FROM user") or die('Error');
     echo '<div class="card"><div class="card-header"><i class="fas fa-user-times me-2"></i>Hapus Data Siswa</div><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Nama</th><th>Email</th><th>No HP</th><th>Sekolah</th><th>Aksi</th></tr></thead><tbody>';
     while($row = mysqli_fetch_array($result)) {
-      echo '<tr><td>'.htmlspecialchars($row['name']).'</td><td>'.htmlspecialchars($row['email']).'</td><td>'.htmlspecialchars($row['mob']).'</td><td>'.htmlspecialchars($row['college']).'</td><td><a href="update.php?demail1='.urlencode($row['email']).'" class="btn btn-danger btn-sm" onclick="return confirm(\'Anda yakin ingin menghapus siswa ini?\')"><i class="fas fa-trash-alt"></i> Hapus</a></td></tr>';
+        echo '<tr>
+                <td>'.htmlspecialchars($row['name']).'</td>
+                <td>'.htmlspecialchars($row['email']).'</td>
+                <td>'.htmlspecialchars($row['mob']).'</td>
+                <td>'.htmlspecialchars($row['college']).'</td>
+                
+                <!-- PERUBAHAN DI SINI: ganti `demail1` menjadi `demail_student` -->
+                <td><a href="update.php?demail_student='.urlencode($row['email']).'" class="btn btn-danger btn-sm" onclick="return confirm(\'Anda yakin ingin menghapus siswa ini?\')">
+                    <i class="fas fa-trash-alt"></i> Hapus
+                </a></td>
+              </tr>';
     }
+
     echo '</tbody></table></div></div></div>';
   } ?>
 

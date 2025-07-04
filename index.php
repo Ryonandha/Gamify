@@ -189,22 +189,35 @@ if (isset($_GET['error'])) {
       <div class="row g-5 justify-content-center">
         <div class="col-md-5">
           <div class="developer-card">
-            <img src="photo.png" alt="RYONANDHA" class="developer-img mb-3">
+            <!-- PERBAIKAN: Menambahkan "img/" pada path src -->
+            <img 
+              src="img/photo.png" 
+              alt="RYONANDHA" 
+              class="developer-img mb-3"
+              onerror="this.onerror=null;this.src='https://placehold.co/150x150/FFD700/0056b3?text=Foto+Ryo';"
+            >
             <h5 class="mt-3" style="color: var(--dark-text);">RYONANDHA MITCHELL</h5>
             <p class="text-muted">202201009</p>
           </div>
         </div>
         <div class="col-md-5">
           <div class="developer-card">
-            <img src="profilepic.png" alt="EVAN" class="developer-img mb-3">
+            <!-- PERBAIKAN: Menambahkan "img/" pada path src -->
+            <img 
+              src="img/profilepic.png" 
+              alt="EVAN" 
+              class="developer-img mb-3"
+              onerror="this.onerror=null;this.src='https://placehold.co/150x150/87CEEB/0056b3?text=Foto+Evan';"
+            >
             <h5 class="mt-3" style="color: var(--dark-text);">EVAN FARREL</h5>
-            <p class="text-muted">202201007</p>
+            <p class="text-muted">202201004</p>
           </div>
         </div>
       </div>
     </section>
   </div>
 </div>
+
 <section id="about" class="section">
   <div class="container text-center">
     <h2 class="mb-4"><i class="fa-solid fa-rocket"></i> Tentang Ujian Ceria <i class="fa-solid fa-rocket"></i></h2>
