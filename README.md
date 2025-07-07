@@ -65,5 +65,3 @@ It could be very helpful for educational institues acting as :
 * home page (index.php)
 Security with password , even the admin cannot look at the password , ensuring the trust of the users.
 A feedback system available for suggesting improvements and registering complaints.
-
-

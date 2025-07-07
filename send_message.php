@@ -1,41 +1,59 @@
 <?php
-include_once 'dbConnection.php';
 session_start();
+include_once 'dbConnection.php';
 
-$from_email = $_SESSION['email'] ?? 'admin@example.com'; // fallback
-
-// Ambil semua ranking
-$result = mysqli_query($con, "SELECT email FROM rank ORDER BY score DESC") or die('Error mengambil data ranking');
-
-$ranked_users = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $ranked_users[] = $row['email'];
-}
-
-$total_users = count($ranked_users);
-if ($total_users == 0) {
-    header("Location: dash.php?q=3&msg=Tidak ada data ranking");
+// Pastikan hanya guru yang login yang bisa mengakses
+if (!isset($_SESSION['email'])) {
+    header("location:index.php");
     exit();
 }
 
-// Ambil 5 teratas
-$top_users = array_slice($ranked_users, 0, min(5, $total_users));
-// Ambil 5 terbawah
-$bottom_users = array_slice($ranked_users, -min(5, $total_users));
+// Pastikan ini adalah admin/guru
+$sender_name = $_SESSION['name'];
 
-// Kirim pesan untuk top 5
-foreach ($top_users as $email) {
-    $msg = "Selamat! Kamu termasuk 5 besar leaderboard 🎉";
-    mysqli_query($con, "INSERT INTO messages (from_email, to_email, content) VALUES ('$from_email', '$email', '$msg')") or die("Error kirim pesan top");
+// Ambil 5 siswa dengan skor tertinggi
+$top_5_query = mysqli_query($con, "SELECT email FROM `rank` ORDER BY score DESC LIMIT 5");
+$top_5_users = [];
+while ($row = mysqli_fetch_assoc($top_5_query)) {
+    $top_5_users[] = $row['email'];
 }
 
-// Kirim pesan untuk bottom 5
-foreach ($bottom_users as $email) {
-    $msg = "Tetap semangat! Jangan menyerah dan terus tingkatkan prestasimu 💪";
-    mysqli_query($con, "INSERT INTO messages (from_email, to_email, content) VALUES ('$from_email', '$email', '$msg')") or die("Error kirim pesan bottom");
+// Ambil 5 siswa dengan skor terendah
+$bottom_5_query = mysqli_query($con, "SELECT email FROM `rank` ORDER BY score ASC LIMIT 5");
+$bottom_5_users = [];
+while ($row = mysqli_fetch_assoc($bottom_5_query)) {
+    $bottom_5_users[] = $row['email'];
 }
 
-// Redirect dengan notifikasi sukses
-header("Location: dash.php?q=3&msg=Pesan berhasil dikirim!");
+// --- PENGIRIMAN PESAN YANG DIOPTIMALKAN ---
+
+// 1. Siapkan statement satu kali di luar loop
+$stmt = $con->prepare("INSERT INTO messages (recipient_email, sender_name, message) VALUES (?, ?, ?)");
+
+// 2. Bind parameter yang akan diubah di dalam loop
+$stmt->bind_param("sss", $recipient_email, $sender_name, $message_text);
+
+// Pesan Apresiasi untuk 5 Teratas
+$message_text = "Kerja bagus! Prestasimu sangat membanggakan. Terus pertahankan semangat belajarmu!";
+foreach ($top_5_users as $email) {
+    $recipient_email = $email; // Set email penerima untuk iterasi ini
+    $stmt->execute();
+}
+
+// Pesan Semangat untuk 5 Terbawah
+$message_text = "Jangan patah semangat! Setiap langkah adalah bagian dari proses belajar. Terus berusaha, kamu pasti bisa lebih baik lagi!";
+foreach ($bottom_5_users as $email) {
+    // Pastikan tidak mengirim pesan ganda
+    if (!in_array($email, $top_5_users)) {
+        $recipient_email = $email; // Set email penerima untuk iterasi ini
+        $stmt->execute();
+    }
+}
+
+// 3. Tutup statement setelah selesai digunakan
+$stmt->close();
+
+// Redirect kembali ke dashboard guru dengan notifikasi
+header("location: dash.php?q=2&status=messagesent");
 exit();
 ?>

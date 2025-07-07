@@ -199,6 +199,7 @@ CREATE TABLE `user` (
   `email` varchar(50) NOT NULL,
   `mob` bigint(20) NOT NULL,
   `password` varchar(100) NOT NULL
+  'avatar' VARCHAR(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------

@@ -9,8 +9,7 @@ if (isset($_POST['email'], $_POST['password'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // 2. Siapkan "Prepared Statement" untuk keamanan dari SQL Injection
-    // Kita hanya mencari pengguna berdasarkan email
+    // 2. Siapkan "Prepared Statement" untuk keamanan
     $stmt = $con->prepare("SELECT email, password, name FROM user WHERE email = ?");
     if ($stmt === false) {
         die('Prepare failed: ' . htmlspecialchars($con->error));
@@ -20,12 +19,11 @@ if (isset($_POST['email'], $_POST['password'])) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // 3. Cek apakah pengguna dengan email tersebut ditemukan
+    // 3. Cek apakah pengguna ditemukan
     if ($result->num_rows === 1) {
         $row = $result->fetch_assoc();
         
         // 4. Verifikasi password yang di-input dengan HASH di database
-        // Inilah bagian kunci yang memperbaiki masalah Anda
         if (password_verify($password, $row['password'])) {
             // == LOGIN BERHASIL ==
 
@@ -38,8 +36,11 @@ if (isset($_POST['email'], $_POST['password'])) {
             $_SESSION["name"] = $row['name'];
             $_SESSION["email"] = $row['email'];
 
-            // Redirect ke halaman dashboard siswa
-            header("location:account.php?q=1");
+            // ======================================================
+            // == PERUBAHAN DI SINI ==
+            // Arahkan ke halaman loading, bukan langsung ke account.php
+            // ======================================================
+            header("location:loading.php");
             exit(); // Hentikan eksekusi skrip setelah redirect
 
         }
@@ -51,7 +52,7 @@ if (isset($_POST['email'], $_POST['password'])) {
     exit();
 
 } else {
-    // Jika ada yang mencoba mengakses file ini secara langsung tanpa mengirim data
+    // Jika ada yang mencoba mengakses file ini secara langsung
     header("location:index.php");
     exit();
 }
