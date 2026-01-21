@@ -1,67 +1,123 @@
-# Online-exam-system
 
-Licensed under CC BY-NC-ND 4.0. No commercial use or modifications allowed.
+# 🎓 Gamify - Sistem Ujian Online (Ujian Ceria)
 
-Online examination system is a app for setup online quiz with so many functionality.
-It is a PHP project.
+![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey)
+![PHP](https://img.shields.io/badge/PHP-%3E%3D%207.4-blue)
+![MySQL](https://img.shields.io/badge/Database-MySQL-orange)
+![Bootstrap](https://img.shields.io/badge/Frontend-Bootstrap%205-purple)
 
+**Gamify (Ujian Ceria)** adalah aplikasi Sistem Ujian Online berbasis web yang dirancang dengan antarmuka yang ceria, ramah anak, dan interaktif. Aplikasi ini bertujuan untuk memudahkan institusi pendidikan dalam melaksanakan evaluasi pembelajaran melalui kuis online, manajemen materi berbasis video, serta pemantauan nilai siswa secara *real-time*.
 
-Instalation ::
+Proyek ini dikembangkan menggunakan **PHP Native** dan **MySQL**, serta memanfaatkan **Bootstrap 5** untuk memastikan tampilan yang responsif dan menarik di berbagai perangkat.
 
-### Steps
+---
 
-1)Copy full folder in your web directory.
+## ✨ Fitur Utama
 
-2)Import database in your phpmyadmin named project1.sql.
+Sistem ini membagi akses ke dalam tiga peran (role) utama dengan fungsionalitas yang spesifik:
 
-3)Edit dbconnection file.change username,password and database name.
-- Default user is root,password is null and database name is project1.
+### 👨‍🏫 Panel Guru (Teacher Panel)
+* **Dashboard Informatif:** Ringkasan aktivitas dan navigasi cepat.
+* **Manajemen Kuis:** Membuat, mengedit, dan menghapus kuis atau ujian.
+* **Bank Soal:** Menambahkan pertanyaan pilihan ganda lengkap dengan kunci jawaban dan penjelasan.
+* **Manajemen Materi:** Mengunggah dan mengelola materi pembelajaran berupa video (integrasi Embed YouTube).
+* **Analitik Siswa:** Memantau skor siswa, melihat riwayat pengerjaan, dan daftar peringkat (Leaderboard).
+* **Peringkat:** Melihat peringkat global siswa berdasarkan akumulasi skor.
 
-<!-- Default admin email id is head@gmail.com and password is head .
-admin password is md5 encypted. -->
+### 👨‍🎓 Panel Siswa (Student Panel)
+* **Antarmuka Ramah Anak:** Desain visual yang menarik ("Ujian Ceria") untuk meningkatkan minat belajar.
+* **Ujian Interaktif:** Mengerjakan kuis yang tersedia dengan batasan waktu otomatis.
+* **Riwayat Ujian:** Melihat kembali ujian yang telah dikerjakan beserta skor yang diperoleh.
+* **Akses Materi:** Menonton video pembelajaran yang telah disediakan oleh guru sebelum atau sesudah ujian.
+* **Peringkat:** Melihat posisi peringkat diri sendiri dibandingkan teman-teman lainnya.
 
-For any query or feedback contact me at kpsagar1999@gmail.com.
+### 👮 Panel Admin / Kepala Sekolah
+* **Manajemen Pengguna:** Menambah akun guru baru atau menonaktifkan akun yang sudah ada.
+* **Monitoring Feedback:** Membaca pesan, saran, atau masukan yang dikirimkan melalui halaman depan.
+* **Pengawasan:** Memiliki akses menyeluruh untuk memantau aktivitas sistem.
 
-Thanx.
+---
 
+## 🛠️ Teknologi yang Digunakan
 
-## Precise Explanation regarding the work in detail :
-INSTALLATION STEPS :
-1. Copy zip file and Unzip file on your local server.
-2. Put this file inside WAMP or XAMPP server.
-3. Database Configuration
-- Open phpmyadmin
-- Create Database named project1​.
-- Import database project1.sql from downloaded folder(inside database)
-4. Open Your browser put inside "http://localhost/Online-Exam-System/"
-<!-- 5. To Login as admin put the following details.
-- Admin Login Details
-- Login Id: head@gmail.com
-- Password: head -->
-## ONLINE EXAMINATION SYSTEM FEATURES :
-1. Login system must be present and secured by password.
-2. Ability to setup multiple choice question paper. 
-3. Display of quick and accurate results.
-4. Rankings , and history of exams attempted can be looked after.
-4. Admin panel
-- Can add/remove the teachers.
-- Can view the feedbacks.
- 5. Teacher panel
-- Can add/remove question papers.
-- Can view the individual test results and overall rankings.
- 6. Student panel
-- Can write the exams shown in home page 
-- Only once  a student can attempt the examination , after then the examination is disabled until the teacher removes it.
-- Can view the overall ranking and the details of scores and examinations previously attempted.
- 7. Log out after the over.
-8. Users can send the suggestions and feedbacks from the home page , it can be viewed by admin.
-## What makes our online exam system web project differs from others
-Low internet connection would be sufficient to load the pages, since we haven’t used any picture data(using pictures the user with low internet connection takes time to load the images).
-In other online exam system websites , we can find only one admin who is surely responsible for the addition or deletion of the test, but we made this site any number of authorized persons can add/remove the examinations and these all authorized persons and users of this site will be controlled by the admin.
-It could be very helpful for educational institues acting as :
-* Admin(headdash.php)    ---   director of institute 
-* Teacher(dash.php)   ---   professors of college
-* User(acccount.php)        ---   students of the college
-* home page (index.php)
-Security with password , even the admin cannot look at the password , ensuring the trust of the users.
-A feedback system available for suggesting improvements and registering complaints.
+* **Bahasa Pemrograman:** PHP (Native)
+* **Database:** MySQL / MariaDB
+* **Frontend Framework:** Bootstrap 5.3.2
+* **Ikon & Font:** Font Awesome 6, Google Fonts ('Comic Neue' & 'Poppins')
+* **Web Server:** Apache (via XAMPP/WAMP)
+
+---
+
+## 🚀 Panduan Instalasi (Localhost)
+
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di komputer Anda:
+
+### 1. Persiapan Lingkungan
+Pastikan Anda telah menginstal aplikasi server lokal seperti **XAMPP**, **WAMP**, atau **MAMP**.
+
+### 2. Instalasi File
+1.  Unduh (*Download*) atau *Clone* repositori ini.
+2.  Ekstrak folder proyek (jika berbentuk ZIP).
+3.  Pindahkan folder proyek ke dalam direktori *root* web server Anda:
+    * **XAMPP:** `C:/xampp/htdocs/Gamify`
+    * **WAMP:** `C:/wamp64/www/Gamify`
+
+### 3. Konfigurasi Database
+1.  Buka **phpMyAdmin** di browser (biasanya `http://localhost/phpmyadmin`).
+2.  Buat database baru dengan nama **`mathmath`**.
+3.  Pilih database `mathmath` yang baru dibuat, lalu klik tab **Import**.
+4.  Pilih file **`mathmath.sql`** yang terdapat di dalam folder proyek ini.
+5.  Klik tombol **Go** atau **Kirim** untuk mengimpor struktur tabel dan data awal.
+
+### 4. Konfigurasi Koneksi (Opsional)
+Buka file `dbConnection.php` menggunakan teks editor (seperti VS Code). Pastikan konfigurasi sesuai dengan server lokal Anda (default XAMPP biasanya tidak perlu diubah):
+
+```php
+<?php
+// Konfigurasi Database
+$con = new mysqli('localhost', 'root', '', 'mathmath');
+
+if ($con->connect_error) {
+    die("Koneksi gagal: " . $con->connect_error);
+}
+?>
+
+```
+
+### 5. Menjalankan Aplikasi
+
+Buka browser Anda dan akses alamat berikut:
+`http://localhost/Gamify/`
+
+---
+
+## 🔑 Akun Default (Demo)
+
+Gunakan akun berikut untuk mencoba fitur-fitur di dalam aplikasi:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| **Kepala Sekolah (Admin)** | `head@gmail.com` | `head` |
+| **Guru** | `teacher1@gmail.com` | *(Lihat database atau buat baru via Admin)* |
+
+*> **Catatan:** Untuk keamanan, disarankan segera mengganti password setelah login pertama kali atau membuat akun guru baru melalui panel Admin.*
+
+---
+
+## 👥 Tim Pengembang
+
+Proyek ini dibuat dengan dedikasi tinggi oleh:
+
+* **Ryonandha Mitchell** (NIM: 202201009)
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah **CC BY-NC-ND 4.0** (Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International).
+
+* ✅ **Diizinkan:** Berbagi dan menyalin materi ini dalam format apapun.
+* ❌ **Dilarang:** Menggunakan materi ini untuk kepentingan komersial.
+* ❌ **Dilarang:** Mengubah, menggubah, atau membuat turunan dari materi ini dan mendistribusikannya.
+
+---
